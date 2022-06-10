@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.10
 
 import argparse
 from io import open
@@ -12,9 +12,19 @@ from colorama import Fore, Back, Style
 
 colorama.init(autoreset=True)
 
-parser = argparse.ArgumentParser()
+filetype = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.psd', '.psb')
 
-parser.add_argument(
+def str_filetypes(list_types):
+	text = ''
+	spacing = ', '
+	for single_type in list_types:
+		text = text + single_type.strip('.') + spacing
+	return text[0:len(text)-len(spacing)]
+
+parser = argparse.ArgumentParser(description=f'Batch image conversion. Filetype: {str_filetypes(filetype)}.')
+group = parser.add_argument_group('commands', 'use these commands to customize script behaviour and image conversion')
+
+group.add_argument(
 	"--dpi",
 	"-d",
 	type=int,
@@ -24,7 +34,7 @@ parser.add_argument(
 	help="pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72)",
 )
 
-parser.add_argument(
+group.add_argument(
 	"--size",
 	"-s",
 	type=int,
@@ -34,7 +44,7 @@ parser.add_argument(
 	help="max resolution of image (long side) in pixel, must be in range 1-10000 (default: 1000)",
 )
 
-parser.add_argument(
+group.add_argument(
 	"--colorspace",
 	"-c",
 	type=bool,
@@ -43,7 +53,7 @@ parser.add_argument(
 	help="convert all images to RGB color space",
 )
 
-parser.add_argument(
+group.add_argument(
 	"--mute",
 	"-m",
 	type=bool,
@@ -52,7 +62,7 @@ parser.add_argument(
 	help="play alert sound when finished",
 )
 
-parser.add_argument(
+group.add_argument(
 	"--wait",
 	"-w",
 	type=bool,
@@ -61,45 +71,49 @@ parser.add_argument(
 	help="wait user keypress (Enter) at the end",
 )
 
-def main(args):
-	
-	extensions = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.psd', '.psb')
-	folder = os.path.realpath(__file__).rsplit(os.sep, 1)[0]
-	
+def print_init(args, folder):
 	print(f"\nRoot folder: {Fore.BLUE}{str(folder)}\n")
 	print(f"Dpi value: {Fore.BLUE}{args.dpi}")
 	print(f"Max pixel long side: {Fore.BLUE}{args.size}{Style.RESET_ALL}")
-	print(f"Color space conversion: {Fore.BLUE}{args.colorspace}", end ="")
+	print(f"Color space conversion: {Fore.BLUE}{args.colorspace}", end='')
 	if (args.colorspace) is True:
 		print(f" -> {Fore.YELLOW}WARNING: colorspace conversion from CMYK to RGB may not be accurate!")
 	else:
 		print('')
 	print(f"Mute alert when finished: {Fore.BLUE}{args.mute}")
-	print(f"Wait after end of conversion: {Fore.BLUE}{args.wait}", end ="")
+	print(f"Wait after end of conversion: {Fore.BLUE}{args.wait}", end='')
 	if (args.wait) is True:
 		print(f" -> {Fore.GREEN}Press enter to confirm exit when finished.")
 	else:
 		print('')
+
+def wait_keypress():
+	try:
+		input(f"\n{Fore.YELLOW}Press enter to continue")
+	except SyntaxError:
+		pass
+
+def main(args):
 	
-	start = folder[:len(folder)]
+	folder = os.path.realpath(__file__).rsplit(os.sep, 1)[0]
+	
+	print_init(args, folder)
+	
 	exception_files = []
 	other_files = []
 	MAX_SIZE = (args.size, args.size)
 	DPI = args.dpi
 	count = 0
 	
-	try:
-		input(f"\n{Fore.YELLOW}Press enter to start conversion\n")
-	except SyntaxError:
-		pass
+	wait_keypress()
 	
-	print("Processing images")
+	print("\nProcessing images")
 	
 	startTime = datetime.now()
 	
 	for root, dirnames, filenames in tqdm(list(os.walk(folder)), unit_divisor=100, colour='green', bar_format='{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt} Folders | Elapsed: {elapsed} | Remaining: {remaining}'):
 		for filename in filenames:
-			if filename.endswith(extensions):
+			if filename.endswith(filetype):
 				image_path = root + os.sep + filename
 				try:
 					im = Image.open(image_path)
@@ -151,12 +165,9 @@ def main(args):
 			if(other[1]!=os.path.basename(__file__)):
 				print(f"-> {Fore.CYAN}{other[1]}{Style.RESET_ALL} found in {Fore.CYAN}{other[0]}")
 	if (args.mute) is False:
-		print('\a')
+		print('\a', end='')
 	if (args.wait) is True:
-		try:
-			input(f"\n{Fore.GREEN}Press enter to exit\n")
-		except SyntaxError:
-			pass
+		wait_keypress()
 
 if __name__ == "__main__":
 

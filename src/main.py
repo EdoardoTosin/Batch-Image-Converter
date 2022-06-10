@@ -143,7 +143,7 @@ def main(args):
 		print('\a')
 	if (args.wait) is True:
 		try:
-			input(f"\n{Fore.GREEN}Press enter to continue")
+			input(f"\n{Fore.GREEN}Press enter to exit")
 		except SyntaxError:
 			pass
 

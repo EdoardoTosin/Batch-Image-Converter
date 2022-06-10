@@ -33,25 +33,25 @@ Python script that converts images to a certain dpi, max long side resolution an
 > - Linux: `python3`
 > - Windows: `python`
 
-### Command help [-h, --help]
+### Help [-h, --help]
 
 Show help message and exit
 
 Usage: `main.py -h`
 
-### Command dpi [--dpi, -d]
+### Dpi [--dpi, -d]
 
 Set pixel density in pixels per inch (dpi), must be in range 1-1000 (Default: 72).
 
 Usage: `main.py -d 72`
 
-### Command size [--size, -s]
+### Size [--size, -s]
 
 Set max resolution of image (long side) in pixel, must be in range 1-10000 (Default: 1000)".
 
 Usage: `main.py -s 1000`
 
-### Command colorspace [--colorspace, --no-colorspace, -c]
+### Color space [--colorspace, --no-colorspace, -c]
 
 Set color space to RGB (default: False).
 
@@ -62,9 +62,9 @@ Set color space to RGB (default: False).
 
 Usage: `main.py -c`
 
-### Command mute [--mute, --no-mute, -m]
+### Mute [--mute, --no-mute, -m]
 
-Convert all images to RGB color space (default: False).
+Set alert at end of program (default: False).
 
 | True   | False     |
 | ------ | --------- |
@@ -73,7 +73,7 @@ Convert all images to RGB color space (default: False).
 
 Usage: `main.py -m`
 
-### Command wait [--wait, --no-wait, -w]
+### Wait [--wait, --no-wait, -w]
 
 Wait user keypress (`Enter`) at the end (default: True).
 

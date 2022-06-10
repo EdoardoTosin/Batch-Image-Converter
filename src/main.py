@@ -49,7 +49,7 @@ parser.add_argument(
 	type=bool,
 	default=False,
 	action=argparse.BooleanOptionalAction,
-	help="play beep sound when finished",
+	help="play alert sound when finished",
 )
 
 parser.add_argument(
@@ -72,9 +72,14 @@ def main(args):
 	print(f"Color space conversion: {Fore.BLUE}{args.colorspace}", end ="")
 	if (args.colorspace) is True:
 		print(f" -> {Fore.YELLOW}WARNING: colorspace conversion from CMYK to RGB may not be accurate!", end ="")
-	print(f"\nWait after end of conversion: {Fore.BLUE}{args.wait}", end ="")
+	else:
+		print('')
+	print(f"Mute alert when finished: {Fore.BLUE}{args.mute}")
+	print(f"Wait after end of conversion: {Fore.BLUE}{args.wait}", end ="")
 	if (args.wait) is True:
 		print(f" -> {Fore.GREEN}Press enter to confirm exit when finished.")
+	else:
+		print()
 	print("\nProcessing images")
 	
 	start = folder[:len(folder)]

@@ -1,4 +1,4 @@
-# Image-Batch-Converter
+# Batch-Image-Converter
 
 ## Summary
 
@@ -10,7 +10,7 @@ Python script that convert images to a certain dpi, max long side resolution and
 
 ### Linux
 
-- `git clone https://github.com/EdoardoTosin/Image-Batch-Converter.git`
+- `git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git`
 - `cd Image-Converter/src && python3 -m pip install -r requirements.txt`
 - Copy `main.py` into the folder you want to convert all images.
 - `python3 main.py`
@@ -18,7 +18,7 @@ Python script that convert images to a certain dpi, max long side resolution and
 
 ### Windows
 
-- `git clone https://github.com/EdoardoTosin/Image-Batch-Converter.git`
+- `git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git`
 - `cd Image-Converter\src; python -m pip install -r requirements.txt`
 - Copy `main.py` into the folder you want to convert all images.
 - Double click `main.py` to start it with default parameters or launch via terminal with `python main.py`.
@@ -86,4 +86,4 @@ Usage: `main.py -w`
 
 ## License
 
-This software is released under the terms of the GNU General Public License v3.0. See the [LICENSE](https://github.com/EdoardoTosin/Image-Batch-Converter/tree/main/LICENSE) file for further information.
+This software is released under the terms of the GNU General Public License v3.0. See the [LICENSE](https://github.com/EdoardoTosin/Batch-Image-Converter/tree/main/LICENSE) file for further information.

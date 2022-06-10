@@ -26,7 +26,7 @@ Python script that convert images to a certain dpi, max long side resolution and
 
 ![Help](./doc/help.jpg)
 
-> Append following string before calling main.py script based on your operating system:
+> Append the following string before calling main.py script based on your operating system:
 > - Linux: `python3`
 > - Windows: `python`
 

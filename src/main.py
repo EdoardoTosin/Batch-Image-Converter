@@ -144,7 +144,7 @@ def main(args):
 		print("No corrupted images found.")
 	
 	if (len(other_files)==1):
-		print("No other files found (in addition to the images already converted).")
+		print("No other files found.")
 	else:
 		print("\nOther files (not converted):")
 		for other in other_files:

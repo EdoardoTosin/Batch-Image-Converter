@@ -4,6 +4,10 @@
 
 Python script that converts images to a certain dpi, max long side resolution and rgb color space. If images are not in jpg or png then they are all converted to jpg.
 
+Accepted file types: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
+
+> **Note**: psd and psb file types have not been tested.
+
 ![Output](./doc/output.jpg)
 
 ## Instructions
@@ -54,6 +58,8 @@ Usage: `main.py -s 1000`
 ### Color space [--colorspace, --no-colorspace, -c]
 
 Set color space to RGB (default: False).
+
+> **Warning**: converting CYMK to RGB might not be accurate due to PIL Python module not using icc profiles.
 
 | True         | False           |
 | ------------ | --------------- |

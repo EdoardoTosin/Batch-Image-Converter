@@ -71,7 +71,7 @@ def main(args):
 	print(f"Max pixel long side: {Fore.BLUE}{args.size}{Style.RESET_ALL}")
 	print(f"Color space conversion: {Fore.BLUE}{args.colorspace}", end ="")
 	if (args.colorspace) is True:
-		print(f" -> {Fore.YELLOW}WARNING: colorspace conversion from CMYK to RGB may not be accurate!", end ="")
+		print(f" -> {Fore.YELLOW}WARNING: colorspace conversion from CMYK to RGB may not be accurate!")
 	else:
 		print('')
 	print(f"Mute alert when finished: {Fore.BLUE}{args.mute}")
@@ -79,7 +79,7 @@ def main(args):
 	if (args.wait) is True:
 		print(f" -> {Fore.GREEN}Press enter to confirm exit when finished.")
 	else:
-		print()
+		print('')
 	print("\nProcessing images")
 	
 	start = folder[:len(folder)]

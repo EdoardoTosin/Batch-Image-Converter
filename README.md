@@ -6,7 +6,7 @@ Python script that converts images to a certain dpi, max long side resolution an
 
 Accepted file types: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 
-> **Note**: psd and psb file types have not been tested.
+> **Warning**: psd and psb file types have not been tested.
 
 ![Output](./doc/output.jpg)
 
@@ -32,7 +32,7 @@ Accepted file types: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 
 ![Help](./doc/help.jpg)
 
-> Append the following string before calling main.py script based on your operating system:
+> **Note**: append the following string before calling main.py script based on your operating system.
 > 
 > - Linux: `python3`
 > - Windows: `python`

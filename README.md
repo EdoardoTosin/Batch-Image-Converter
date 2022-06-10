@@ -10,14 +10,14 @@ Python script that convert images to a certain dpi, max long side resolution and
 
 ### Linux
 - `git clone https://github.com/EdoardoTosin/Image-Batch-Converter.git`
-- `cd Image-Converter/src && pip install -r requirements.txt`
+- `cd Image-Converter/src && python3 -m pip install -r requirements.txt`
 - Copy `main.py` into the folder you want to convert all images.
 - `python3 main.py`
 - Help screen: `python3 main.py -h`
 
 ### Windows
 - `git clone https://github.com/EdoardoTosin/Image-Batch-Converter.git`
-- `cd Image-Converter\src; pip install -r requirements.txt`
+- `cd Image-Converter\src; python -m pip install -r requirements.txt`
 - Copy `main.py` into the folder you want to convert all images.
 - Double click `main.py` to start it with default parameters or launch via terminal with `python main.py`.
 - Help screen: `python main.py -h`

@@ -9,6 +9,7 @@ Python script that convert images to a certain dpi, max long side resolution and
 ## Instructions
 
 ### Linux
+
 - `git clone https://github.com/EdoardoTosin/Image-Batch-Converter.git`
 - `cd Image-Converter/src && python3 -m pip install -r requirements.txt`
 - Copy `main.py` into the folder you want to convert all images.
@@ -16,6 +17,7 @@ Python script that convert images to a certain dpi, max long side resolution and
 - Help screen: `python3 main.py -h`
 
 ### Windows
+
 - `git clone https://github.com/EdoardoTosin/Image-Batch-Converter.git`
 - `cd Image-Converter\src; python -m pip install -r requirements.txt`
 - Copy `main.py` into the folder you want to convert all images.
@@ -27,6 +29,7 @@ Python script that convert images to a certain dpi, max long side resolution and
 ![Help](./doc/help.jpg)
 
 > Append the following string before calling main.py script based on your operating system:
+> 
 > - Linux: `python3`
 > - Windows: `python`
 
@@ -52,10 +55,10 @@ Usage: `main.py -s 1000`
 
 Set color space to RGB (default: False).
 
-| True | False |
-| ---  |  ---  |
-|--colorspace|--no-colorspace|
-|  -c  |       |
+| True         | False           |
+| ------------ | --------------- |
+| --colorspace | --no-colorspace |
+| -c           |                 |
 
 Usage: `main.py -c`
 
@@ -63,10 +66,10 @@ Usage: `main.py -c`
 
 Convert all images to RGB color space (default: False).
 
-| True | False |
-| ---  |  ---  |
-|--mute|--no-mute|
-|  -m  |       |
+| True   | False     |
+| ------ | --------- |
+| --mute | --no-mute |
+| -m     |           |
 
 Usage: `main.py -m`
 
@@ -74,12 +77,13 @@ Usage: `main.py -m`
 
 Wait user keypress (`Enter`) at the end (default: True).
 
-| True | False |
-| ---  |  ---  |
-|--wait|--no-wait|
-|  -w  |       |
+| True   | False     |
+| ------ | --------- |
+| --wait | --no-wait |
+| -w     |           |
 
 Usage: `main.py -w`
 
 ## License
+
 This software is released under the terms of the GNU General Public License v3.0. See the [LICENSE](https://github.com/EdoardoTosin/Image-Batch-Converter/tree/main/LICENSE) file for further information.

@@ -21,7 +21,7 @@ parser.add_argument(
 	choices=range(1, 1000),
 	metavar="[1-1000]",
 	default=72,
-	help="pixel density in pixels per inch (dpi), must be in range 1-1000 (Default: 72)",
+	help="pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72)",
 )
 
 parser.add_argument(
@@ -31,7 +31,7 @@ parser.add_argument(
 	choices=range(1, 10000),
 	metavar="[1-10000]",
 	default=1000,
-	help="max resolution of image (long side) in pixel, must be in range 1-10000 (Default: 1000)",
+	help="max resolution of image (long side) in pixel, must be in range 1-10000 (default: 1000)",
 )
 
 parser.add_argument(

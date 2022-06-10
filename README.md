@@ -2,7 +2,7 @@
 
 ## Summary
 
-Python script that convert images to a certain dpi, max long side resolution and rgb color space. If images are not in jpg or png then they are all converted to jpg.
+Python script that converts images to a certain dpi, max long side resolution and rgb color space. If images are not in jpg or png then they are all converted to jpg.
 
 ![Output](./doc/output.jpg)
 

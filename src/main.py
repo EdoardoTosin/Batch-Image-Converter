@@ -89,11 +89,11 @@ def main(args):
 	count = 0
 	
 	try:
-		input(f"\n{Fore.YELLOW}Press enter to start conversion")
+		input(f"\n{Fore.YELLOW}Press enter to start conversion\n")
 	except SyntaxError:
 		pass
 	
-	print("\nProcessing images")
+	print("Processing images")
 	
 	startTime = datetime.now()
 	
@@ -154,7 +154,7 @@ def main(args):
 		print('\a')
 	if (args.wait) is True:
 		try:
-			input(f"\n{Fore.GREEN}Press enter to exit")
+			input(f"\n{Fore.GREEN}Press enter to exit\n")
 		except SyntaxError:
 			pass
 

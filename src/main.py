@@ -80,7 +80,6 @@ def main(args):
 		print(f" -> {Fore.GREEN}Press enter to confirm exit when finished.")
 	else:
 		print('')
-	print("\nProcessing images")
 	
 	start = folder[:len(folder)]
 	exception_files = []
@@ -88,6 +87,13 @@ def main(args):
 	MAX_SIZE = (args.size, args.size)
 	DPI = args.dpi
 	count = 0
+	
+	try:
+		input(f"\n{Fore.YELLOW}Press enter to start conversion")
+	except SyntaxError:
+		pass
+	
+	print("\nProcessing images")
 	
 	startTime = datetime.now()
 	
@@ -121,7 +127,7 @@ def main(args):
 					count+=1
 				
 			else:
-				other_files.append(filename)
+				other_files.append([root, filename])
 	
 	time_exec = (datetime.now() - startTime)
 	
@@ -141,9 +147,9 @@ def main(args):
 		print("No other files found (in addition to the images already converted).")
 	else:
 		print("\nOther files (not converted):")
-		for x in range(len(other_files)):
-			if(other_files[x]!=os.path.basename(__file__)):
-				print(f"-> {Fore.CYAN}{other_files[x]}")
+		for other in other_files:
+			if(other[1]!=os.path.basename(__file__)):
+				print(f"-> {Fore.CYAN}{other[1]}{Style.RESET_ALL} found in {Fore.CYAN}{other[0]}")
 	if (args.mute) is False:
 		print('\a')
 	if (args.wait) is True:

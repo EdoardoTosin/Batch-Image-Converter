@@ -13,8 +13,14 @@ name: "CodeQL"
 
 on:
   push:
+    paths:
+      - "scripts/**.py"
+      - .github/workflows/codeql-analysis.yml
     branches: [ "main" ]
   pull_request:
+    paths:
+      - "scripts/**.py"
+      - .github/workflows/codeql-analysis.yml
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
   schedule:

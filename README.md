@@ -37,44 +37,46 @@ Accepted file types: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 > - Linux: `python3`
 > - Windows: `python`
 
-### Help :sos: [-h, --help]
+#### Help :sos: [-h, --help]
 
 Show help message and exit
 
 Usage: `main.py -h`
 
-### Dpi [-d, --dpi]
+### Image conversion properties
+
+#### Dpi [-d, --dpi]
 
 Set pixel density in pixels per inch (dpi), must be in range 1-1000 (Default: 72).
 
 Usage: `main.py -d 72`
 
-### Max Resolution [-s, --size]
+#### Max Resolution [-s, --size]
 
 Set max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000 (default: 1000)".
 
 Usage: `main.py -s 1000`
 
-### Color space [--colorspace, --no-colorspace, --cs, --no-cs]
+#### Color space [--colorspace, --no-colorspace, --cs, --no-cs]
 
 Set color space to RGB (default: False).
 
-> **Warning**: converting CYMK to RGB might not be accurate due to PIL Python module not using icc profiles.
+> **Warning**: converting CYMK to RGB might not be accurate because the script doesn't  use the icc profiles.
 
 | True         | False           |
 | ------------ | --------------- |
 | --colorspace | --no-colorspace |
 | --cs         | --no-cs         |
 
-Usage: `main.py --colorspace`
+Usage: `main.py --colorspace` or `main.py --no-colorspace`
 
-### Quality [-q, --quality]
+#### Quality [-q, --quality]
 
 Set quality of output images, must be in range 1-100 (values above 95 should be avoided) (default: 80).
 
 Usage: `main.py -q 80`
 
-### Optimize [--optimize, --no-optimize]
+#### Optimize [--optimize, --no-optimize]
 
 Attempt to compress the palette by eliminating unused colors (default: True).
 
@@ -82,9 +84,11 @@ Attempt to compress the palette by eliminating unused colors (default: True).
 | ---------- | ------------- |
 | --optimize | --no-optimize |
 
-Usage: `main.py --optimize`
+Usage: `main.py --optimize` or `main.py --no-optimize`
 
-### Alert :bell: [--alert, --no-alert]
+### Customize script behaviour
+
+#### Alert :bell: [--alert, --no-alert]
 
 Play alert sound when finished the conversion (default: True).
 
@@ -94,7 +98,7 @@ Play alert sound when finished the conversion (default: True).
 
 Usage: `main.py --mute`
 
-### Wait :raised_hand: [--wait, --no-wait]
+#### Wait :raised_hand: [--wait, --no-wait]
 
 Wait user keypress (`Enter`) when finished the conversion (default: True).
 
@@ -102,7 +106,7 @@ Wait user keypress (`Enter`) when finished the conversion (default: True).
 | ------ | --------- |
 | --wait | --no-wait |
 
-Usage: `main.py --wait`
+Usage: `main.py --wait` or `main.py --no-wait`
 
 ## License
 

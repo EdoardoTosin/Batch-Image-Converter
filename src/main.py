@@ -28,7 +28,7 @@ group.add_argument(
 	"--dpi",
 	"-d",
 	type=int,
-	choices=range(1, 1000),
+	choices=range(1, 1001),
 	metavar="[1-1000]",
 	default=72,
 	help="pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72)",
@@ -38,7 +38,7 @@ group.add_argument(
 	"--size",
 	"-s",
 	type=int,
-	choices=range(1, 10000),
+	choices=range(1, 10001),
 	metavar="[1-10000]",
 	default=1000,
 	help="max resolution of image (long side) in pixel, must be in range 1-10000 (default: 1000)",
@@ -71,27 +71,32 @@ group.add_argument(
 	help="wait user keypress (Enter) at the end",
 )
 
+
 def print_init(args, folder):
+
 	print(f"\nRoot folder: {Fore.BLUE}{str(folder)}\n")
 	print(f"Dpi value: {Fore.BLUE}{args.dpi}")
 	print(f"Max pixel long side: {Fore.BLUE}{args.size}{Style.RESET_ALL}")
 	print(f"Color space conversion: {Fore.BLUE}{args.colorspace}", end='')
-	if (args.colorspace) is True:
+	if args.colorspace is True:
 		print(f" -> {Fore.YELLOW}WARNING: colorspace conversion from CMYK to RGB may not be accurate!")
 	else:
 		print('')
 	print(f"Mute alert when finished: {Fore.BLUE}{args.mute}")
 	print(f"Wait after end of conversion: {Fore.BLUE}{args.wait}", end='')
-	if (args.wait) is True:
+	if args.wait is True:
 		print(f" -> {Fore.GREEN}Press enter to confirm exit when finished.")
 	else:
 		print('')
 
+
 def wait_keypress():
+
 	try:
-		input(f"\n{Fore.YELLOW}Press enter to continue")
+		input(f"\n{Fore.YELLOW}Press {Back.BLACK}{Style.BRIGHT}Enter{Style.NORMAL}{Back.RESET} to continue or {Back.BLACK}{Style.BRIGHT}CTRL+C{Style.NORMAL}{Back.RESET} to abort{Style.RESET_ALL}")
 	except SyntaxError:
 		pass
+
 
 def main(args):
 	
@@ -120,18 +125,18 @@ def main(args):
 				except:
 					exception_files.append([root, filename])
 				else:
-					if (filename.lower().endswith('.png')):
+					if filename.lower().endswith('.png'):
 						colour_space = 'RGBA'
 					else:
 						colour_space = 'RGB'
 					if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
-						if (args.colorspace) is True:
+						if args.colorspace is True:
 							im = im.convert(colour_space)
 						new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
 						im.save(new_image_path, dpi=(DPI,DPI), quality=90, optimize=True)
 						os.remove(image_path)
 					else:
-						if (args.colorspace):
+						if args.colorspace is True:
 							im = im.convert(colour_space)
 						im.save(image_path, dpi=(DPI,DPI), quality=90, optimize=True)
 						new_image_path = image_path
@@ -150,24 +155,28 @@ def main(args):
 	
 	print(f"Total number of converted images: {Fore.GREEN}{count}")
 	
-	if (len(exception_files)>0):
-		print(f"\n{Fore.RED}{len(exception_files)}{Style.RESET_ALL} Corrupted images:")
+	if len(exception_files)>0:
+		plural_s = ''
+		if len(exception_files)>1:
+			plural_s = 's'
+		print(f"\n{Fore.RED}{len(exception_files)}{Style.RESET_ALL} Corrupted image{plural_s}:")
 		for excpt in exception_files:
 			print(f"-> {Fore.RED}{excpt[1]}{Style.RESET_ALL} found in {Fore.RED}{excpt[0]}")
 	else:
 		print("No corrupted images found.")
 	
-	if (len(other_files)==1):
+	if len(other_files)==1:
 		print("No other files found.")
 	else:
 		print("\nOther files (not converted):")
 		for other in other_files:
-			if(other[1]!=os.path.basename(__file__)):
+			if other[1]!=os.path.basename(__file__):
 				print(f"-> {Fore.CYAN}{other[1]}{Style.RESET_ALL} found in {Fore.CYAN}{other[0]}")
-	if (args.mute) is False:
+	if args.mute is False:
 		print('\a', end='')
-	if (args.wait) is True:
+	if args.wait is True:
 		wait_keypress()
+
 
 if __name__ == "__main__":
 

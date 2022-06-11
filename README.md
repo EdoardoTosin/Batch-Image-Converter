@@ -43,13 +43,13 @@ Show help message and exit
 
 Usage: `main.py -h`
 
-### Dpi [--dpi, -d]
+### Dpi [-d, --dpi]
 
 Set pixel density in pixels per inch (dpi), must be in range 1-1000 (Default: 72).
 
 Usage: `main.py -d 72`
 
-### Max Resolution [--size, -s]
+### Max Resolution [-s, --size]
 
 Set max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000 (default: 1000)".
 
@@ -68,11 +68,11 @@ Set color space to RGB (default: False).
 
 Usage: `main.py --colorspace`
 
-### Quality [--quality, --no-quality]
+### Quality [-q, --quality]
 
 Set quality of output images, must be in range 1-100 (values above 95 should be avoided) (default: 80).
 
-Usage: `main.py --quality 80`
+Usage: `main.py -q 80`
 
 ### Optimize [--optimize, --no-optimize]
 

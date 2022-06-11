@@ -26,8 +26,8 @@ group_img = parser.add_argument_group('commands', 'Image conversion properties')
 group_opt = parser.add_argument_group('other options', 'Customize script behaviour (alert and wait)')
 
 group_img.add_argument(
-	"--dpi",
 	"-d",
+	"--dpi",
 	type=int,
 	choices=range(1, 1001),
 	metavar="[1-1000]",
@@ -36,8 +36,8 @@ group_img.add_argument(
 )
 
 group_img.add_argument(
-	"--size",
 	"-s",
+	"--size",
 	type=int,
 	choices=range(1, 10001),
 	metavar="[1-10000]",
@@ -55,8 +55,8 @@ group_img.add_argument(
 )
 
 group_img.add_argument(
-	"--quality",
 	"-q",
+	"--quality",
 	type=int,
 	choices=range(1, 101),
 	metavar="[1-100]",

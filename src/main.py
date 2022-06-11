@@ -129,6 +129,7 @@ def main(args):
 	exception_files = []
 	other_files = []
 	MAX_SIZE = (args.size, args.size)
+	DPI = (args.dpi, args.dpi)
 	count = 0
 	
 	wait_keypress()
@@ -154,15 +155,15 @@ def main(args):
 						if args.colorspace is True:
 							im = im.convert(colour_space)
 						new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-						im.save(new_image_path, dpi=(args.dpi, args.dpi), quality=args.quality, optimize=args.optimize)
+						im.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
 						os.remove(image_path)
 					else:
 						if args.colorspace is True:
 							im = im.convert(colour_space)
-						im.save(image_path, dpi=(args.dpi, args.dpi), quality=args.quality, optimize=args.optimize)
+						im.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
 						new_image_path = image_path
 					img = Image.open(new_image_path)
-					img.thumbnail((args.size, args.size), Image.ANTIALIAS)
+					img.thumbnail(MAX_SIZE, Image.ANTIALIAS)
 					img.save(new_image_path)
 					count+=1
 				

@@ -22,9 +22,10 @@ def str_filetypes(list_types):
 	return text[0:len(text)-len(spacing)]
 
 parser = argparse.ArgumentParser(description=f'Batch image conversion. Filetype: {str_filetypes(filetype)}.')
-group = parser.add_argument_group('commands', 'use these commands to customize script behaviour and image conversion')
+group_img = parser.add_argument_group('commands', 'Image conversion properties')
+group_opt = parser.add_argument_group('other options', 'Customize script behaviour (alert and wait)')
 
-group.add_argument(
+group_img.add_argument(
 	"--dpi",
 	"-d",
 	type=int,
@@ -34,41 +35,57 @@ group.add_argument(
 	help="pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72)",
 )
 
-group.add_argument(
+group_img.add_argument(
 	"--size",
 	"-s",
 	type=int,
 	choices=range(1, 10001),
 	metavar="[1-10000]",
 	default=1000,
-	help="max resolution of image (long side) in pixel, must be in range 1-10000 (default: 1000)",
+	help="max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000 (default: 1000)",
 )
 
-group.add_argument(
+group_img.add_argument(
 	"--colorspace",
-	"-c",
+	"--cs",
 	type=bool,
 	default=False,
 	action=argparse.BooleanOptionalAction,
 	help="convert all images to RGB color space",
 )
 
-group.add_argument(
-	"--mute",
-	"-m",
-	type=bool,
-	default=False,
-	action=argparse.BooleanOptionalAction,
-	help="play alert sound when finished",
+group_img.add_argument(
+	"--quality",
+	"-q",
+	type=int,
+	choices=range(1, 101),
+	metavar="[1-100]",
+	default=80,
+	help="quality of output images, must be in range 1-100 (values above 95 should be avoided) (default: 80)",
 )
 
-group.add_argument(
-	"--wait",
-	"-w",
+group_img.add_argument(
+	"--optimize",
 	type=bool,
 	default=True,
 	action=argparse.BooleanOptionalAction,
-	help="wait user keypress (Enter) at the end",
+	help="attempt to compress the palette by eliminating unused colors",
+)
+
+group_opt.add_argument(
+	"--alert",
+	type=bool,
+	default=True,
+	action=argparse.BooleanOptionalAction,
+	help="play alert sound when finished the conversion",
+)
+
+group_opt.add_argument(
+	"--wait",
+	type=bool,
+	default=True,
+	action=argparse.BooleanOptionalAction,
+	help="wait user keypress (Enter) when finished the conversion",
 )
 
 
@@ -77,12 +94,17 @@ def print_init(args, folder):
 	print(f"\nRoot folder: {Fore.BLUE}{str(folder)}\n")
 	print(f"Dpi value: {Fore.BLUE}{args.dpi}")
 	print(f"Max pixel long side: {Fore.BLUE}{args.size}{Style.RESET_ALL}")
+	print(f"Output image quality: {Fore.BLUE}{args.quality}{Style.RESET_ALL}", end='')
+	if args.quality>95:
+		print(f" -> {Fore.YELLOW}WARNING: values above 95 might not decrease file size with hardly any gain in image quality!")
+	else:
+		print('')
 	print(f"Color space conversion: {Fore.BLUE}{args.colorspace}", end='')
 	if args.colorspace is True:
 		print(f" -> {Fore.YELLOW}WARNING: colorspace conversion from CMYK to RGB may not be accurate!")
 	else:
 		print('')
-	print(f"Mute alert when finished: {Fore.BLUE}{args.mute}")
+	print(f"Mute alert when finished: {Fore.BLUE}{args.alert}")
 	print(f"Wait after end of conversion: {Fore.BLUE}{args.wait}", end='')
 	if args.wait is True:
 		print(f" -> {Fore.GREEN}Press enter to confirm exit when finished.")
@@ -107,7 +129,6 @@ def main(args):
 	exception_files = []
 	other_files = []
 	MAX_SIZE = (args.size, args.size)
-	DPI = args.dpi
 	count = 0
 	
 	wait_keypress()
@@ -133,15 +154,15 @@ def main(args):
 						if args.colorspace is True:
 							im = im.convert(colour_space)
 						new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-						im.save(new_image_path, dpi=(DPI,DPI), quality=90, optimize=True)
+						im.save(new_image_path, dpi=(DPI,DPI), quality=args.quality, optimize=args.optimize)
 						os.remove(image_path)
 					else:
 						if args.colorspace is True:
 							im = im.convert(colour_space)
-						im.save(image_path, dpi=(DPI,DPI), quality=90, optimize=True)
+						im.save(image_path, dpi=(args.dpi, args.dpi), quality=args.quality, optimize=args.optimize)
 						new_image_path = image_path
 					img = Image.open(new_image_path)
-					img.thumbnail(MAX_SIZE, Image.ANTIALIAS)
+					img.thumbnail(args.size, args.size, Image.ANTIALIAS)
 					img.save(new_image_path)
 					count+=1
 				
@@ -172,7 +193,7 @@ def main(args):
 		for other in other_files:
 			if other[1]!=os.path.basename(__file__):
 				print(f"-> {Fore.CYAN}{other[1]}{Style.RESET_ALL} found in {Fore.CYAN}{other[0]}")
-	if args.mute is False:
+	if args.alert is True:
 		print('\a', end='')
 	if args.wait is True:
 		wait_keypress()

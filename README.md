@@ -53,7 +53,7 @@ Usage: `main.py -d 72`
 
 #### Max Resolution [-s, --size]
 
-Set max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000 (default: 1000)".
+Set max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000 (default: 1000).
 
 Usage: `main.py -s 1000`
 

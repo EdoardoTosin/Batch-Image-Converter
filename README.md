@@ -37,7 +37,7 @@ Accepted file types: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 > - Linux: `python3`
 > - Windows: `python`
 
-### Help [-h, --help]
+### Help `:sos:` [-h, --help]
 
 Show help message and exit
 
@@ -49,13 +49,13 @@ Set pixel density in pixels per inch (dpi), must be in range 1-1000 (Default: 72
 
 Usage: `main.py -d 72`
 
-### Size [--size, -s]
+### Max Resolution [--size, -s]
 
-Set max resolution of image (long side) in pixel, must be in range 1-10000 (Default: 1000)".
+Set max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000 (default: 1000)".
 
 Usage: `main.py -s 1000`
 
-### Color space [--colorspace, --no-colorspace, -c]
+### Color space [--colorspace, --no-colorspace, --cs, --no-cs]
 
 Set color space to RGB (default: False).
 
@@ -64,31 +64,45 @@ Set color space to RGB (default: False).
 | True         | False           |
 | ------------ | --------------- |
 | --colorspace | --no-colorspace |
-| -c           |                 |
+| --cs         | --no-cs         |
 
-Usage: `main.py -c`
+Usage: `main.py --colorspace`
 
-### Mute [--mute, --no-mute, -m]
+### Quality [--quality, --no-quality]
 
-Set alert at end of program (default: False).
+Set quality of output images, must be in range 1-100 (values above 95 should be avoided) (default: 80).
+
+Usage: `main.py --quality 80`
+
+### Optimize [--optimize, --no-optimize]
+
+Attempt to compress the palette by eliminating unused colors (default: True).
+
+| True       | False         |
+| ---------- | ------------- |
+| --optimize | --no-optimize |
+
+Usage: `main.py --optimize`
+
+### Alert `:bell:` [--alert, --no-alert]
+
+Play alert sound when finished the conversion (default: True).
 
 | True   | False     |
 | ------ | --------- |
 | --mute | --no-mute |
-| -m     |           |
 
-Usage: `main.py -m`
+Usage: `main.py --mute`
 
-### Wait [--wait, --no-wait, -w]
+### Wait `:raised_hand:` [--wait, --no-wait]
 
-Wait user keypress (`Enter`) at the end (default: True).
+Wait user keypress (`Enter`) when finished the conversion (default: True).
 
 | True   | False     |
 | ------ | --------- |
 | --wait | --no-wait |
-| -w     |           |
 
-Usage: `main.py -w`
+Usage: `main.py --wait`
 
 ## License
 

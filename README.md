@@ -37,7 +37,7 @@ Accepted file types: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 > - Linux: `python3`
 > - Windows: `python`
 
-### Help `:sos:` [-h, --help]
+### Help :sos: [-h, --help]
 
 Show help message and exit
 
@@ -84,7 +84,7 @@ Attempt to compress the palette by eliminating unused colors (default: True).
 
 Usage: `main.py --optimize`
 
-### Alert `:bell:` [--alert, --no-alert]
+### Alert :bell: [--alert, --no-alert]
 
 Play alert sound when finished the conversion (default: True).
 
@@ -94,7 +94,7 @@ Play alert sound when finished the conversion (default: True).
 
 Usage: `main.py --mute`
 
-### Wait `:raised_hand:` [--wait, --no-wait]
+### Wait :raised_hand: [--wait, --no-wait]
 
 Wait user keypress (`Enter`) when finished the conversion (default: True).
 

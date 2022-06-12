@@ -7,6 +7,7 @@ Among the options there is the possibility of setting the quality, the maximum r
 There is the possibility to convert all images to the RGB colour space (Important: ICC colour profiles are not used for this conversion so switching between different formats may result in incorrect colours).  
 It also prints out a list of all corrupted images and any other files found.  
 The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.  
+
 > **Warning**: psd and psb file types have not been tested.
 
 ![Output](./doc/output.jpg)
@@ -60,11 +61,11 @@ Usage: `main.py -s 1000`
 
 #### Max Resolution [-f, --filter]
 
-Set type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = NEAREST).
+Set type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = Nearest).
 
-| 0 | 1 | 2 | 3 |
-| ---- | ---- | ---- | ---- |
-| NEAREST | BILINEAR | BICUBIC | ANTIALIAS |
+| 0       | 1        | 2       | 3         |
+| ------- | -------- | ------- | --------- |
+| Nearest | Bilinear | Bicubic | Antialias |
 
 Usage: `main.py -f 0`
 

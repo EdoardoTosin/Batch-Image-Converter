@@ -163,10 +163,12 @@ def main(args):
 					else:
 						if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
 							new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-							img.thumbnail(MAX_SIZE, Image.ANTIALIAS).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							img.thumbnail(MAX_SIZE, Image.ANTIALIAS)
+							img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
 							os.remove(image_path)
 						else:
-							img.thumbnail(MAX_SIZE, Image.ANTIALIAS).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							img.thumbnail(MAX_SIZE, Image.ANTIALIAS)
+							img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
 					count+=1
 				
 			else:

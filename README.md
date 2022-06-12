@@ -2,10 +2,11 @@
 
 ## Summary
 
-Python script that converts images to a certain dpi, max long side resolution and rgb color space. If images are not in jpg or png then they are all converted to jpg.
-
-Accepted file types: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
-
+CLI script in python that converts all images found within the folder where the script is located (and all sub-folders). If the images are not in png or jpg (and jpeg) format, then it converts them to the latter format.  
+Among the options there is the possibility of setting the quality, the maximum resolution in pixels of the long side of the image while maintaining the aspect ratio (without upscaling if smaller) and changing the dpi.  
+There is the possibility to convert all images to the RGB colour space (Important: ICC colour profiles are not used for this conversion so switching between different formats may result in incorrect colours).  
+It also prints out a list of all corrupted images and any other files found.  
+The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.  
 > **Warning**: psd and psb file types have not been tested.
 
 ![Output](./doc/output.jpg)

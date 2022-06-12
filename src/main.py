@@ -12,8 +12,6 @@ from colorama import Fore, Back, Style
 
 colorama.init(autoreset=True)
 
-filters = [Image.NEAREST, Image.BILINEAR, Image.BICUBIC,  Image.ANTIALIAS]
-
 filetype = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.psd', '.psb')
 
 def str_filetypes(list_types):
@@ -54,10 +52,10 @@ group_img.add_argument(
 	"--filter",
 	type=int,
 	choices=range(0, 4),
-	metavar="[0 = NEAREST, 1 = BILINEAR, 2 = BICUBIC, 3 = ANTIALIAS]",
+	metavar="[0 = Nearest, 1 = Bilinear, 2 = Bicubic, 3 = Antialias]",
 	default=0,
 	nargs=1,
-	help="type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = NEAREST)",
+	help="type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = Nearest)",
 )
 
 group_img.add_argument(
@@ -106,11 +104,11 @@ group_opt.add_argument(
 
 
 def print_init(args, folder):
-
+	
 	print(f"\nRoot folder: {Fore.BLUE}{str(folder)}\n")
 	print(f"Dpi value: {Fore.BLUE}{args.dpi[0]}")
 	print(f"Max pixel long side: {Fore.BLUE}{args.size[0]}{Style.RESET_ALL}")
-	switcher = { 
+	switcher = {
         0: 'Nearest',
         1: 'Bilinear',
         2: 'Bicubic',
@@ -137,7 +135,7 @@ def print_init(args, folder):
 
 
 def wait_keypress(val):
-
+	
 	try:
 		input(f"\n{Fore.YELLOW}Press {Back.BLACK}{Style.BRIGHT}Enter{Style.NORMAL}{Back.RESET} to {val}{Style.RESET_ALL}")
 	except SyntaxError:
@@ -153,6 +151,7 @@ def main(args):
 	exception_files = []
 	other_files = []
 	MAX_SIZE = (args.size[0], args.size[0])
+	filters = [Image.NEAREST, Image.BILINEAR, Image.BICUBIC,  Image.ANTIALIAS]
 	DPI = (args.dpi[0], args.dpi[0])
 	count = 0
 	
@@ -192,7 +191,7 @@ def main(args):
 						else:
 							img.save(image_path, dpi=DPI, quality=args.quality[0], optimize=args.optimize)
 					count+=1
-				
+			
 			else:
 				other_files.append([root, filename])
 	
@@ -227,5 +226,5 @@ def main(args):
 
 
 if __name__ == "__main__":
-
+	
 	main(parser.parse_args())

@@ -58,6 +58,16 @@ Set max resolution of image (long side) in pixel (downscaling only), must be in 
 
 Usage: `main.py -s 1000`
 
+#### Max Resolution [-f, --filter]
+
+Set type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = NEAREST).
+
+| 0 | 1 | 2 | 3 |
+| ---- | ---- | ---- | ---- |
+| NEAREST | BILINEAR | BICUBIC | ANTIALIAS |
+
+Usage: `main.py -f 0`
+
 #### Color space [--colorspace, --no-colorspace, --cs, --no-cs]
 
 Set color space to RGB (default: False).

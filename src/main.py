@@ -12,6 +12,8 @@ from colorama import Fore, Back, Style
 
 colorama.init(autoreset=True)
 
+filters = [Image.NEAREST, Image.BILINEAR, Image.BICUBIC,  Image.ANTIALIAS]
+
 filetype = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.psd', '.psb')
 
 def str_filetypes(list_types):
@@ -32,6 +34,7 @@ group_img.add_argument(
 	choices=range(1, 1001),
 	metavar="[1-1000]",
 	default=72,
+	nargs=1,
 	help="pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72)",
 )
 
@@ -42,7 +45,19 @@ group_img.add_argument(
 	choices=range(1, 10001),
 	metavar="[1-10000]",
 	default=1000,
+	nargs=1,
 	help="max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000 (default: 1000)",
+)
+
+group_img.add_argument(
+	"-f",
+	"--filter",
+	type=int,
+	choices=range(0, 4),
+	metavar="[0 = NEAREST, 1 = BILINEAR, 2 = BICUBIC, 3 = ANTIALIAS]",
+	default=0,
+	nargs=1,
+	help="type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = NEAREST)",
 )
 
 group_img.add_argument(
@@ -61,6 +76,7 @@ group_img.add_argument(
 	choices=range(1, 101),
 	metavar="[1-100]",
 	default=80,
+	nargs=1,
 	help="quality of output images, must be in range 1-100 (values above 95 should be avoided) (default: 80)",
 )
 
@@ -92,10 +108,18 @@ group_opt.add_argument(
 def print_init(args, folder):
 
 	print(f"\nRoot folder: {Fore.BLUE}{str(folder)}\n")
-	print(f"Dpi value: {Fore.BLUE}{args.dpi}")
-	print(f"Max pixel long side: {Fore.BLUE}{args.size}{Style.RESET_ALL}")
-	print(f"Output image quality: {Fore.BLUE}{args.quality}{Style.RESET_ALL}", end='')
-	if args.quality>95:
+	print(f"Dpi value: {Fore.BLUE}{args.dpi[0]}")
+	print(f"Max pixel long side: {Fore.BLUE}{args.size[0]}{Style.RESET_ALL}")
+	switcher = { 
+        0: 'Nearest',
+        1: 'Bilinear',
+        2: 'Bicubic',
+		3: 'Antialias',
+    }
+	filter_name = switcher.get(args.filter[0], lambda: 'Nearest')
+	print(f"Downscaling filter: {Fore.BLUE}{filter_name}{Style.RESET_ALL}")
+	print(f"Output image quality: {Fore.BLUE}{args.quality[0]}{Style.RESET_ALL}", end='')
+	if args.quality[0]>95:
 		print(f" -> {Fore.YELLOW}WARNING: values above 95 might not decrease file size with hardly any gain in image quality!")
 	else:
 		print('')
@@ -112,10 +136,10 @@ def print_init(args, folder):
 		print('')
 
 
-def wait_keypress():
+def wait_keypress(val):
 
 	try:
-		input(f"\n{Fore.YELLOW}Press {Back.BLACK}{Style.BRIGHT}Enter{Style.NORMAL}{Back.RESET} to continue or {Back.BLACK}{Style.BRIGHT}CTRL+C{Style.NORMAL}{Back.RESET} to abort{Style.RESET_ALL}")
+		input(f"\n{Fore.YELLOW}Press {Back.BLACK}{Style.BRIGHT}Enter{Style.NORMAL}{Back.RESET} to {val}{Style.RESET_ALL}")
 	except SyntaxError:
 		pass
 
@@ -128,11 +152,11 @@ def main(args):
 	
 	exception_files = []
 	other_files = []
-	MAX_SIZE = (args.size, args.size)
-	DPI = (args.dpi, args.dpi)
+	MAX_SIZE = (args.size[0], args.size[0])
+	DPI = (args.dpi[0], args.dpi[0])
 	count = 0
 	
-	wait_keypress()
+	wait_keypress(f"continue or {Back.BLACK}{Style.BRIGHT}CTRL+C{Style.NORMAL}{Back.RESET} to abort")
 	
 	print("\nProcessing images")
 	
@@ -152,23 +176,21 @@ def main(args):
 					else:
 						colour_space = 'RGB'
 					
+					img.thumbnail(MAX_SIZE, filters[args.filter[0]])
 					if args.colorspace is True:
-						img.thumbnail(MAX_SIZE, Image.ANTIALIAS)
 						if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
 							new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-							img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality[0], optimize=args.optimize)
 							os.remove(image_path)
 						else:
-							img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality[0], optimize=args.optimize)
 					else:
 						if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
 							new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-							img.thumbnail(MAX_SIZE, Image.ANTIALIAS)
-							img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							img.save(new_image_path, dpi=DPI, quality=args.quality[0], optimize=args.optimize)
 							os.remove(image_path)
 						else:
-							img.thumbnail(MAX_SIZE, Image.ANTIALIAS)
-							img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							img.save(image_path, dpi=DPI, quality=args.quality[0], optimize=args.optimize)
 					count+=1
 				
 			else:
@@ -201,7 +223,7 @@ def main(args):
 	if args.alert is True:
 		print('\a', end='')
 	if args.wait is True:
-		wait_keypress()
+		wait_keypress(f"exit")
 
 
 if __name__ == "__main__":

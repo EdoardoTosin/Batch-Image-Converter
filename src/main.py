@@ -4,7 +4,7 @@ import argparse
 from io import open
 import os
 from tqdm import tqdm
-from PIL import Image, ImageCms
+from PIL import Image#, ImageCms
 from datetime import datetime
 import re
 import colorama
@@ -143,7 +143,7 @@ def main(args):
 			if filename.endswith(filetype):
 				image_path = root + os.sep + filename
 				try:
-					im = Image.open(image_path)
+					img = Image.open(image_path)
 				except:
 					exception_files.append([root, filename])
 				else:
@@ -151,20 +151,22 @@ def main(args):
 						colour_space = 'RGBA'
 					else:
 						colour_space = 'RGB'
-					if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
-						if args.colorspace is True:
-							im = im.convert(colour_space)
-						new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-						im.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-						os.remove(image_path)
+					
+					if args.colorspace is True:
+						img.thumbnail(MAX_SIZE, Image.ANTIALIAS)
+						if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
+							new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
+							img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							os.remove(image_path)
+						else:
+							img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
 					else:
-						if args.colorspace is True:
-							im = im.convert(colour_space)
-						im.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-						new_image_path = image_path
-					img = Image.open(new_image_path)
-					img.thumbnail(MAX_SIZE, Image.ANTIALIAS)
-					img.save(new_image_path)
+						if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
+							new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
+							img.thumbnail(MAX_SIZE, Image.ANTIALIAS).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							os.remove(image_path)
+						else:
+							img.thumbnail(MAX_SIZE, Image.ANTIALIAS).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
 					count+=1
 				
 			else:

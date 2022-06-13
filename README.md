@@ -35,7 +35,7 @@ The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 > - Linux: `python3`
 > - Windows: `python`
 
-### Help :sos: [-h, --help]
+## Help :sos: [-h, --help]
 
 Show help message and exit
 

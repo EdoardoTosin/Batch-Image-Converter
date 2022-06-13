@@ -73,7 +73,7 @@ Usage: `main.py -f 0`
 
 Set color space to RGB (default: False).
 
-> **Warning**: converting CYMK to RGB might not be accurate because the script doesn't  use the icc profiles.
+> **Warning**: converting CYMK to RGB might not be accurate because the script doesn't use the icc profiles.
 
 | True         | False           |
 | ------------ | --------------- |

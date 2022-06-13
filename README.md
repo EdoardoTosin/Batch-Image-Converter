@@ -59,7 +59,7 @@ Set max resolution of image (long side) in pixel (downscaling only), must be in 
 
 Usage: `main.py -s 1000`
 
-#### Max Resolution [-f, --filter]
+#### Resize Filter [-f, --filter]
 
 Set type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = Nearest).
 

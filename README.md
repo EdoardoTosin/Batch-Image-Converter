@@ -47,7 +47,7 @@ Usage: `main.py -h`
 
 ### Dpi [-d, --dpi]
 
-Set pixel density in pixels per inch (dpi), must be in range 1-1000 (Default: 72).
+Set pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72).
 
 Usage: `main.py -d 72`
 

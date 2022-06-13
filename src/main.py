@@ -13,7 +13,7 @@ from colorama import Fore, Back, Style
 __author__		= "Edoardo Tosin"
 __copyright__	= "Copyright (C) 2021 Edoardo Tosin"
 __credits__		= "Edoardo Tosin"
-__license__		= "GPL"
+__license__		= "GPL-3.0"
 __version__		= "1.0.0"
 
 colorama.init(autoreset=True)

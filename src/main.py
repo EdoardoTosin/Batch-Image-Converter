@@ -10,6 +10,12 @@ import re
 import colorama
 from colorama import Fore, Back, Style
 
+__author__		= "Edoardo Tosin"
+__copyright__	= "Copyright (C) 2021 Edoardo Tosin"
+__credits__		= "Edoardo Tosin"
+__license__		= "GPL"
+__version__		= "1.0.0"
+
 colorama.init(autoreset=True)
 
 filetype = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.psd', '.psb')
@@ -21,9 +27,17 @@ def str_filetypes(list_types):
 		text = text + single_type.strip('.') + spacing
 	return text[0:len(text)-len(spacing)]
 
-parser = argparse.ArgumentParser(description=f'Batch image conversion. Filetype: {str_filetypes(filetype)}.')
+parser = argparse.ArgumentParser(description=f'Batch image conversion. Filetype: {str_filetypes(filetype)}.', prog=f".{os.sep}"+__file__.split(os.sep)[-1])
 group_img = parser.add_argument_group('commands', 'Image conversion properties')
 group_opt = parser.add_argument_group('other options', 'Customize script behaviour (alert and wait)')
+
+parser.add_argument(
+	"-v",
+	"--version",
+	action='version',
+	version= __version__,
+)
+
 
 group_img.add_argument(
 	"-d",

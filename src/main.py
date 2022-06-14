@@ -139,12 +139,12 @@ def print_init(args):
 	print(f"Dpi value: {Fore.BLUE}{args.dpi}")
 	print(f"Max pixel long side: {Fore.BLUE}{args.size}{Style.RESET_ALL}")
 	switcher = {
-        0: 'Nearest',
+    	0: 'Nearest',
 		4: 'Box',
 		2: 'Bilinear',
 		5: 'Hamming',
 		3: 'Bicubic',
-        1: 'Lanczos',
+    	1: 'Lanczos',
     }
 	filter_name = switcher.get(args.filter)
 	print(f"Downscaling filter: {Fore.BLUE}{filter_name}{Style.RESET_ALL}")

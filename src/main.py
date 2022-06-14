@@ -2,7 +2,7 @@
 
 import argparse
 from io import open
-import os
+import os, sys
 from tqdm import tqdm
 from PIL import Image#, ImageCms
 from datetime import datetime
@@ -44,7 +44,7 @@ def dir_path(path):
     else:
         raise argparse.ArgumentTypeError(f"\"{path}\" is not a valid path")
 
-current_path = os.path.realpath(__file__).rsplit(os.sep, 1)[0]
+current_path = sys.argv[0].rsplit(os.sep, 1)[0]
 
 group_img.add_argument(
 	"-p",
@@ -81,11 +81,11 @@ group_img.add_argument(
 	"-f",
 	"--filter",
 	type=int,
-	choices=range(0, 4),
-	metavar="[0 = Nearest, 1 = Bilinear, 2 = Bicubic, 3 = Lanczos]",
+	choices=range(0, 6),
+	metavar="[0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]",
 	default=0,
 	nargs=None,
-	help="type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = Nearest)",
+	help="type of filter used for downscaling, must be an integer in range 0-5 (default: 0 = Nearest)",
 )
 
 group_img.add_argument(
@@ -140,9 +140,11 @@ def print_init(args):
 	print(f"Max pixel long side: {Fore.BLUE}{args.size}{Style.RESET_ALL}")
 	switcher = {
         0: 'Nearest',
-        1: 'Bilinear',
-        2: 'Bicubic',
-		3: 'Lanczos',
+		4: 'Box',
+		2: 'Bilinear',
+		5: 'Hamming',
+		3: 'Bicubic',
+        1: 'Lanczos',
     }
 	filter_name = switcher.get(args.filter)
 	print(f"Downscaling filter: {Fore.BLUE}{filter_name}{Style.RESET_ALL}")
@@ -203,7 +205,7 @@ def main(args):
 					else:
 						colour_space = 'RGB'
 					
-					img.thumbnail(MAX_SIZE, filters[args.filter])
+					img.thumbnail(MAX_SIZE, Image.Resampling(args.filter))
 					if args.colorspace is True:
 						if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
 							new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'

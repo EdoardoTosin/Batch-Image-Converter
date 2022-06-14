@@ -70,9 +70,9 @@ Usage: `main.py -s 1000`
 
 Set type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = Nearest).
 
-| 0       | 1        | 2       | 3         |
-| ------- | -------- | ------- | --------- |
-| Nearest | Bilinear | Bicubic | Antialias |
+| 0       | 4    | 2        | 5       | 3       | 5       |
+| ------- | ---- | -------- | ------- | ------- | ------- |
+| Nearest | Box  | Bilinear | Hamming | Bicubic | Lanczos |
 
 Usage: `main.py -f 0`
 

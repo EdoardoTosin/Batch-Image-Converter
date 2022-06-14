@@ -25,7 +25,6 @@ jobs:
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: src
-        spec: 'Batch Image Converter.spec'
 
     - uses: actions/upload-artifact@v2
       with:

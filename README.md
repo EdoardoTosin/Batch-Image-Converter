@@ -45,6 +45,14 @@ Usage: `main.py -h`
 
 ## Image conversion properties
 
+### Path [-p, --path]
+
+Set path where images are located (default: Folder where this script is located).
+
+Usage:
+- Windows: `main.py -p "C:\Windows\Log"`
+- Linux: `main.py -p "/var/log"`
+
 ### Dpi [-d, --dpi]
 
 Set pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72).

@@ -1,6 +1,6 @@
 <h1 align="center">
   <sub>
-    <img src="doc/logo.ico" height="38" width="38">
+    <img src="doc/logo.png" height="38" width="38">
   </sub>
   Batch Image Converter
 </h1>

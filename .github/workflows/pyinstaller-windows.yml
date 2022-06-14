@@ -6,13 +6,13 @@ on:
     paths:
       - '**/*.py'
       - '**/requirements.txt'
-      - '**/*.spec'
+      - '*.spec'
   pull_request:
     branches: [ main ]
     paths:
       - '**/*.py'
       - '**/requirements.txt'
-      - '**/*.spec'
+      - '*.spec'
 
 jobs:
   build:
@@ -25,9 +25,9 @@ jobs:
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: src
+        spec: 'Batch Image Converter.spec'
 
     - uses: actions/upload-artifact@v2
       with:
         name: 'Batch Image Converter'
-        spec: 'Batch Image Converter.spec'
         path: src/dist/windows # or path/to/artifact

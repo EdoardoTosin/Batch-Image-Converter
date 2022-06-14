@@ -1,5 +1,7 @@
 # Batch-Image-Converter
 
+---
+
 ## Summary
 
 Simple script written in Python that converts all images found within the folder where the script is located (and all sub-folders); if the images are not in png or jpg (and jpeg) type, then it converts them to the latter one.  
@@ -37,11 +39,17 @@ The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 
 ## Help :sos: [-h, --help]
 
-Show help message and exit
+Show help message and exit.
 
 ![Help](./doc/help.jpg)
 
 Usage: `main.py -h`
+
+## Version [-v, --version]
+
+Show versione message and exit.
+
+Usage: `main.py -v`
 
 ## Image conversion properties
 
@@ -70,9 +78,9 @@ Usage: `main.py -s 1000`
 
 Set type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = Nearest).
 
-| 0       | 4    | 2        | 5       | 3       | 5       |
-| ------- | ---- | -------- | ------- | ------- | ------- |
-| Nearest | Box  | Bilinear | Hamming | Bicubic | Lanczos |
+| 0       | 4   | 2        | 5       | 3       | 5       |
+| ------- | --- | -------- | ------- | ------- | ------- |
+| Nearest | Box | Bilinear | Hamming | Bicubic | Lanczos |
 
 Usage: `main.py -f 0`
 

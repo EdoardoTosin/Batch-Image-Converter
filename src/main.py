@@ -38,7 +38,6 @@ parser.add_argument(
 	version= __version__,
 )
 
-
 group_img.add_argument(
 	"-d",
 	"--dpi",

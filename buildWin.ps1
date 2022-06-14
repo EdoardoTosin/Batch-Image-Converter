@@ -1,1 +1,1 @@
-python -m PyInstaller src\main.py --onefile --distpath dist --icon=doc\logo.ico -n=Batch-Image-Converter
+python -m PyInstaller src\main.py --onefile --distpath ./ --icon=doc\logo.png -n="Batch Image Converter"

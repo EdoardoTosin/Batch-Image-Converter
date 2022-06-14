@@ -50,6 +50,7 @@ Usage: `main.py -h`
 Set path where images are located (default: Folder where this script is located).
 
 Usage:
+
 - Windows: `main.py -p "C:\Windows\Log"`
 - Linux: `main.py -p "/var/log"`
 

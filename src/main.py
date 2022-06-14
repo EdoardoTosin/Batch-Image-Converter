@@ -38,15 +38,21 @@ parser.add_argument(
 	version= __version__,
 )
 
-def_path = os.path.realpath(__file__).rsplit(os.sep, 1)[0]
+def dir_path(path):
+    if os.path.isdir(path):
+        return path
+    else:
+        raise argparse.ArgumentTypeError(f"\"{path}\" is not a valid path")
+
+current_path = os.path.realpath(__file__).rsplit(os.sep, 1)[0]
 
 group_img.add_argument(
 	"-p",
 	"--path",
-	type=str,
-	default=def_path,
+	type=dir_path,
+	default=current_path,
 	nargs=None,
-	help=f"path where images are located (default: \"{def_path}\")",
+	help=f"path where images are located (default: \"{current_path}\")",
 )
 
 group_img.add_argument(
@@ -127,14 +133,6 @@ group_opt.add_argument(
 )
 
 
-def check_path(path):
-
-	isExist = os.path.exists(path)
-	if isExist is False:
-		print(f"{Fore.RED}Error: Invalid {Fore.YELLOW}--input{Fore.RED}. This path does not exist.{Style.RESET_ALL}")
-		quit()
-
-
 def print_init(args):
 	
 	print(f"\nRoot folder: {Fore.BLUE}{args.path}\n")
@@ -175,8 +173,6 @@ def wait_keypress(val):
 
 
 def main(args):
-
-	check_path(args.path)
 	
 	print_init(args)
 	

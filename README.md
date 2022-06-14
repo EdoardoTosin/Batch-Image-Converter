@@ -1,6 +1,9 @@
-# Batch-Image-Converter
-
----
+<h1 align="center">
+  <sub>
+    <img src="doc/logo.ico" height="38" width="38">
+  </sub>
+  Batch Image Converter
+</h1>
 
 ## Summary
 

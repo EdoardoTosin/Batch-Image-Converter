@@ -41,12 +41,12 @@ parser.add_argument(
 def_path = os.path.realpath(__file__).rsplit(os.sep, 1)[0]
 
 group_img.add_argument(
-	"-i",
-	"--input",
+	"-p",
+	"--path",
 	type=str,
 	default=def_path,
 	nargs=None,
-	help=f"path into where is needed to search for images (default: \"{def_path}\")",
+	help=f"path where images are located (default: \"{def_path}\")",
 )
 
 group_img.add_argument(
@@ -137,7 +137,7 @@ def check_path(path):
 
 def print_init(args):
 	
-	print(f"\nRoot folder: {Fore.BLUE}{args.input}\n")
+	print(f"\nRoot folder: {Fore.BLUE}{args.path}\n")
 	print(f"Dpi value: {Fore.BLUE}{args.dpi}")
 	print(f"Max pixel long side: {Fore.BLUE}{args.size}{Style.RESET_ALL}")
 	switcher = {
@@ -176,7 +176,7 @@ def wait_keypress(val):
 
 def main(args):
 
-	check_path(args.input)
+	check_path(args.path)
 	
 	print_init(args)
 	
@@ -193,7 +193,7 @@ def main(args):
 	
 	startTime = datetime.now()
 	
-	for root, dirnames, filenames in tqdm(list(os.walk(args.input)), unit_divisor=100, colour='green', bar_format='{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt} Folders | Elapsed: {elapsed} | Remaining: {remaining}'):
+	for root, dirnames, filenames in tqdm(list(os.walk(args.path)), unit_divisor=100, colour='green', bar_format='{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt} Folders | Elapsed: {elapsed} | Remaining: {remaining}'):
 		for filename in filenames:
 			if filename.endswith(filetype):
 				image_path = root + os.sep + filename

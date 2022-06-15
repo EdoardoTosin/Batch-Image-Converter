@@ -1,6 +1,6 @@
 <h1 align="center">
   <sub>
-    <img src="doc/logo.png" height="38" width="38">
+    <img src="https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/logo.png" height="38" width="38">
   </sub>
   Batch Image Converter
 </h1>
@@ -15,7 +15,7 @@ The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 
 > **Warning**: psd and psb file types have not been tested.
 
-![Output](./doc/output.jpg)
+![Output](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/output.jpg)
 
 ## Instructions
 
@@ -44,7 +44,7 @@ The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 
 Show help message and exit.
 
-![Help](./doc/help.jpg)
+![Help](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/help.jpg)
 
 Usage: `main.py -h`
 

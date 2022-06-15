@@ -60,7 +60,7 @@ To run the script two modules are required (listed inside `requirements.txt`):
 
 ## Usage
 
-```shell
+```console
 usage: ./main.py [-h] [-v] [-p PATH] [-d [1-1000]] [-s [1-10000]]
                  [-f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]]
                  [--colorspace | --no-colorspace | --cs | --no-cs]

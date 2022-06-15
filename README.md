@@ -17,6 +17,24 @@ The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 
 ![Output](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/output.jpg)
 
+## How it works
+
+Batch Image Converter search recursively for all images matching certain extensions.
+
+By default the script try to open the images, check the dimension are downscale them to fit into 1000x1000 pixel box if bigger (no upscaling) using the `Nearest` filter. If the images are in other filetypes except png and jpeg (jpg) then it converts them to the latter and delete the original ones (otherwise it overwrites the file in jpg or png). During the saving phase, the script sets the dpi to 72.
+
+Default: `main.py --dpi 72 --size 1000 --filter 0 --no-colorspace --quality 80 --optimize --alert --wait`
+
+## Requirements
+
+Python version 3.10 or newer must be installed before following the instructions paragraph.
+
+To run the script two modules are required (listed inside `requirements.txt`):
+
+- Pillow (>=8.0.0 - <=9.1.1)
+
+- tqdm (>=4.32.0 - <=4.64.0)
+
 ## Instructions
 
 ### Linux
@@ -39,6 +57,53 @@ The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 > 
 > - Linux: `python3`
 > - Windows: `python`
+
+## Usage
+
+```shell
+usage: ./main.py [-h] [-v] [-p PATH] [-d [1-1000]] [-s [1-10000]]
+                 [-f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]]
+                 [--colorspace | --no-colorspace | --cs | --no-cs]
+                 [-q [1-100]] [--optimize | --no-optimize]
+                 [--alert | --no-alert] [--wait | --no-wait]
+
+Batch image conversion. Filetype: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
+
+options:
+  -h, --help            show this help message and exit
+  -v, --version         show program's version number and exit
+
+commands:
+  Image conversion properties
+
+  -p PATH, --path PATH  path where images are located (default: ".")
+  -d [1-1000], --dpi [1-1000]
+                        pixel density in pixels per inch (dpi), must be in
+                        range 1-1000 (default: 72)
+  -s [1-10000], --size [1-10000]
+                        max resolution of image (long side) in pixel
+                        (downscaling only), must be in range 1-10000 (default:
+                        1000)
+  -f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos], --filter [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]
+                        type of filter used for downscaling, must be an
+                        integer in range 0-5 (default: 0 = Nearest)
+  --colorspace, --no-colorspace, --cs, --no-cs
+                        convert all images to RGB color space (default: False)
+  -q [1-100], --quality [1-100]
+                        quality of output images, must be in range 1-100
+                        (values above 95 should be avoided) (default: 80)
+  --optimize, --no-optimize
+                        attempt to compress the palette by eliminating unused
+                        colors (default: True)
+
+other options:
+  Customize script behaviour (alert and wait)
+
+  --alert, --no-alert   play alert sound when finished the conversion
+                        (default: True)
+  --wait, --no-wait     wait user keypress (Enter) when finished the
+                        conversion (default: True)
+```
 
 ## Help :sos: [-h, --help]
 
@@ -80,6 +145,8 @@ Usage: `main.py -s 1000`
 ### Resize Filter [-f, --filter]
 
 Set type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = Nearest).
+
+[Filters comparison table](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#filters-comparison-table)
 
 | 0       | 4   | 2        | 5       | 3       | 5       |
 | ------- | --- | -------- | ------- | ------- | ------- |
@@ -137,6 +204,10 @@ Wait user keypress (`Enter`) when finished the conversion (default: True).
 | --wait | --no-wait |
 
 Usage: `main.py --wait` or `main.py --no-wait`
+
+## Developing
+
+See [CONTRIBUTING.md](https://github.com/EdoardoTosin/Batch-Image-Converter/tree/main/CONTRIBUTING.md)
 
 ## License
 

@@ -19,8 +19,17 @@ The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 
 ## How it works
 
-Batch Image Converter search recursively for all images matching certain extensions.
-
+Batch Image Converter search recursively for all recognized images inside the path (included subfolders) and converts them. If there are no arguments given to the script, the following is the normal behaviour:
+- Convert images that are not in jpg, jpeg and png filetype into the former.
+- Path: the folder where the script is located.
+- DPI: 72 dpi.
+- Size: downscaling if bigger than 1000x1000 while mantaining the same aspect ratio.
+- Filter: Downscale filter used is `Nearest`.
+- Color space: No color space conversion to RGB.
+- Quality for saving images: 80.
+- Optimization: Enabled.
+- Alert: Enabled.
+- Wait before exit: Enabled.
 By default the script try to open the images, check the dimension are downscale them to fit into 1000x1000 pixel box if bigger (no upscaling) using the `Nearest` filter. If the images are in other filetypes except png and jpeg (jpg) then it converts them to the latter and delete the original ones (otherwise it overwrites the file in jpg or png). During the saving phase, the script sets the dpi to 72.
 
 Default: `main.py --dpi 72 --size 1000 --filter 0 --no-colorspace --quality 80 --optimize --alert --wait`
@@ -54,7 +63,7 @@ To run the script two modules are required (listed inside `requirements.txt`):
 - Help screen: `python main.py -h`
 
 > **Note**: append the following string before calling main.py script based on your operating system.
-> 
+>
 > - Linux: `python3`
 > - Windows: `python`
 
@@ -105,17 +114,15 @@ other options:
                         conversion (default: True)
 ```
 
-## Help :sos: [-h, --help]
+## Help 🆘 [-h, --help]
 
 Show help message and exit.
-
-![Help](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/help.jpg)
 
 Usage: `main.py -h`
 
 ## Version [-v, --version]
 
-Show versione message and exit.
+Show program's version number and exit.
 
 Usage: `main.py -v`
 
@@ -185,7 +192,7 @@ Usage: `main.py --optimize` or `main.py --no-optimize`
 
 ## Customize script behaviour
 
-### Alert :bell: [--alert, --no-alert]
+### Alert 🔔 [--alert, --no-alert]
 
 Play alert sound when finished the conversion (default: True).
 
@@ -195,7 +202,7 @@ Play alert sound when finished the conversion (default: True).
 
 Usage: `main.py --mute`
 
-### Wait :raised_hand: [--wait, --no-wait]
+### Wait ✋ [--wait, --no-wait]
 
 Wait user keypress (`Enter`) when finished the conversion (default: True).
 

@@ -14,7 +14,7 @@ __author__		= "Edoardo Tosin"
 __copyright__	= "Copyright (C) 2022 Edoardo Tosin"
 __credits__		= "Edoardo Tosin"
 __license__		= "GPL-3.0"
-__version__		= "1.0.0.0"
+__version__		= "1.0.0.1"
 
 colorama.init(autoreset=True)
 
@@ -169,7 +169,8 @@ def print_init(args):
 def wait_keypress(val):
 	
 	try:
-		input(f"\n{Fore.YELLOW}Press {Back.BLACK}{Style.BRIGHT}Enter{Style.NORMAL}{Back.RESET} to {val}{Style.RESET_ALL}")
+		print(f"\n{Fore.YELLOW}Press {Back.BLACK}{Style.BRIGHT}Enter{Style.NORMAL}{Back.RESET} to {val}{Style.RESET_ALL}", end='')
+		press = input()
 	except SyntaxError:
 		pass
 

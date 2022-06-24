@@ -36,7 +36,7 @@ Default: `main.py --dpi 72 --size 1000 --filter 0 --no-colorspace --quality 80 -
 
 ## Requirements
 
-Python version 3.10 or newer must be installed before following the instructions paragraph.
+Python version equal or greater than 3.9 must be installed before following the instructions paragraph.
 
 To run the script two modules are required (listed inside `requirements.txt`):
 
@@ -66,6 +66,10 @@ To run the script two modules are required (listed inside `requirements.txt`):
 >
 > - Linux: `python3`
 > - Windows: `python`
+
+### Portable version
+
+Portable version can be built with the [`Windows script`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/buildWin.ps1) and [`Linux script`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/buildLinux.sh), or downloaded directly from the [Release page](https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest) (with checksums).
 
 ## Usage
 

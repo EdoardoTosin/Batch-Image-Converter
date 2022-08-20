@@ -40,7 +40,7 @@ Python version equal or greater than 3.9 must be installed before following the 
 
 To run the script two modules are required (listed inside `requirements.txt`):
 
-- Pillow (>=8.0.0 - <=9.1.1)
+- Pillow (>=9.0.1 - <=9.2.0)
 
 - tqdm (>=4.32.0 - <=4.64.0)
 

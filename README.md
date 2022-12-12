@@ -39,7 +39,7 @@ Default: `main.py --dpi 72 --size 1000 --filter 0 --no-colorspace --quality 80 -
 
 Python version equal or greater than 3.9 must be installed before following the instructions paragraph.
 
-To run the script two modules are required (listed inside [`requirements.txt`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/src/requirements.txt)`):
+To run the script two modules are required (listed inside [`requirements.txt`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/src/requirements.txt)):
 ```
 Pillow>=9.3.0
 

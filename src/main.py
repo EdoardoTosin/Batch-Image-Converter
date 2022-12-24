@@ -4,7 +4,7 @@ import argparse
 from io import open
 import os, sys
 from tqdm import tqdm
-from PIL import Image#, ImageCms
+from PIL import Image, ImageCms
 from datetime import datetime
 import re
 import colorama
@@ -14,7 +14,7 @@ __author__      = "Edoardo Tosin"
 __copyright__   = "Copyright (C) 2022 Edoardo Tosin"
 __credits__     = "Edoardo Tosin"
 __license__     = "GPL-3.0"
-__version__     = "1.0.0.2"
+__version__     = "1.0.0.3"
 
 colorama.init(autoreset=True)
 
@@ -200,6 +200,8 @@ def main(args):
     filters = [Image.Resampling.NEAREST, Image.Resampling.BILINEAR, Image.Resampling.BICUBIC,  Image.Resampling.LANCZOS]
     DPI = (args.dpi, args.dpi)
     count = 0
+	input_profile = 'cmyk.icm'
+	output_profile = 'sRGB Color Space Profile.ICM'
     
     wait_keypress(f"continue or {Back.BLACK}{Style.BRIGHT}CTRL+C{Style.NORMAL}{Back.RESET} to abort")
     
@@ -223,20 +225,34 @@ def main(args):
                     
                     img.thumbnail(MAX_SIZE, Image.Resampling(args.filter))
                     if args.colorspace is True:
-                        if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
-                            new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-                            img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                            os.remove(image_path)
-                        else:
-                            img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                    else:
-                        if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
-                            new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-                            img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                            os.remove(image_path)
-                        else:
-                            img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                    count+=1
+						if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
+							new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
+							if (img.mode == 'CMYK'):
+								try:
+									img = ImageCms.profileToProfile(img, 'USWebCoatedSWOP.icc', 'sRGB Color Space Profile.icm', renderingIntent=0, outputMode='RGB')
+								except ImageCms.PyCMSError:
+									pass
+								img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							else:
+								img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							os.remove(image_path)
+						else:
+							if (img.mode == 'CMYK'):
+								try:
+									img = ImageCms.profileToProfile(img, input_profile, output_profile, renderingIntent=0, outputMode='RGB')
+								except ImageCms.PyCMSError:
+									pass
+								img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							else:
+								img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+					else:
+						if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
+							new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
+							img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+							os.remove(image_path)
+						else:
+							img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+					count+=1
             
             else:
                 other_files.append([root, filename])

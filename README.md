@@ -218,6 +218,10 @@ Wait user keypress (`Enter`) when finished the conversion (default: True).
 
 Usage: `main.py --wait` or `main.py --no-wait`
 
+## Security Policy
+
+For more details see the [SECURITY](https://github.com/EdoardoTosin/ZooMeeting-Redirector/blob/main/SECURITY.md) file.
+
 ## Developing
 
 See [CONTRIBUTING.md](https://github.com/EdoardoTosin/Batch-Image-Converter/tree/main/CONTRIBUTING.md)

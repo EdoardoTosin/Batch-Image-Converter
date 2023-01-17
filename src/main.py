@@ -226,16 +226,20 @@ def main(args):
                         if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
                             new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
                             img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                            img.close()
                             os.remove(image_path)
                         else:
                             img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                            img.close()
                     else:
                         if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
                             new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
                             img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                            img.close()
                             os.remove(image_path)
                         else:
                             img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                            img.close()
                     count+=1
             
             else:

@@ -276,5 +276,7 @@ def main(args):
 
 
 if __name__ == "__main__":
-    
-    main(parser.parse_args())
+    try:
+        main(parser.parse_args())
+    except (KeyboardInterrupt):
+        sys.exit()

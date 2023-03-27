@@ -64,23 +64,16 @@ tqdm>=4.65.0
 - Double click `main.py` to start it with default parameters or launch via terminal with `python main.py`.
 - Help screen: `python main.py -h`
 
-> **Note**: append the following string before calling main.py script based on your operating system.
->
-> - Linux: `python3`
-> - Windows: `python`
-
 ### Portable version
 
-Portable version can be built with the [`Windows script`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/buildWin.ps1) and [`Linux script`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/buildLinux.sh), or downloaded directly from the [Release page](https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest) (with checksums).
+Portable version can be built with the [`Windows script`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/tools/buildWin.ps1) and [`Linux script`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/tools/buildLinux.sh), or downloaded directly from the [Release page](https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest).
 
 ## Usage
 
 ```console
-usage: main.py [-h] [-v] [-p PATH] [-d [1-1000]] [-s [1-10000]]
-                 [-f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]]
-                 [--colorspace | --no-colorspace | --cs | --no-cs]
-                 [-q [1-100]] [-m [0-10000]] [--optimize | --no-optimize]
-                 [--alert | --no-alert] [--wait | --no-wait]
+usage: main.py [-h] [-v] [-p PATH] [-d [1-1000]] [-s [1-10000]] [-f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]]
+                 [--colorspace | --no-colorspace | --cs | --no-cs] [-q [1-100]] [-m [0-10000]] [--optimize | --no-optimize] [--alert | --no-alert]
+                 [--wait | --no-wait]
 
 Batch image conversion. Filetype: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
 
@@ -99,19 +92,19 @@ commands:
   -f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos], --filter [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]
                         type of filter used for downscaling, must be an integer in range 0-5 (default: 0 = Nearest)
   --colorspace, --no-colorspace, --cs, --no-cs
-                        convert all images to RGB color space
+                        convert all images to RGB color space (default: False)
   -q [1-100], --quality [1-100]
                         quality of output images, must be in range 1-100 (values above 95 should be avoided) (default: 80)
   -m [0-10000], --max-image-mpixels [0-10000]
                         maximum images resolution allowed in Megapixel, (default: 0 [None])
   --optimize, --no-optimize
-                        attempt to compress the palette by eliminating unused colors
+                        attempt to compress the palette by eliminating unused colors (default: True)
 
 other options:
   Customize script behaviour (alert and wait)
 
-  --alert, --no-alert   play alert sound when finished the conversion
-  --wait, --no-wait     wait user keypress (Enter) when finished the conversion
+  --alert, --no-alert   play alert sound when finished the conversion (default: True)
+  --wait, --no-wait     wait user keypress (Enter) when finished the conversion (default: True)
 ```
 
 ## Help 🆘 [-h, --help]

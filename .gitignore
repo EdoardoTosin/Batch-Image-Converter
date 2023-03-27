@@ -135,5 +135,8 @@ dmypy.json
 Batch-Image-Converter-Linux
 Batch-Image-Converter-Win64.exe
 versionfile.txt
+
+# Npm
+node_modules
 package-lock.json
 package.json

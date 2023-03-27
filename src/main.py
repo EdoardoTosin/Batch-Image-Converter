@@ -205,45 +205,50 @@ def main(args):
     
     print("\nProcessing images")
     
+    file_count = sum(len(files) for _, _, files in os.walk(args.path))
+    
     startTime = datetime.now()
     
-    for root, dirnames, filenames in tqdm(list(os.walk(args.path)), unit_divisor=100, colour='green', bar_format='{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt} Folders | Elapsed: {elapsed} | Remaining: {remaining}'):
-        for filename in filenames:
-            if filename.lower().endswith(filetype):
-                image_path = root + os.sep + filename
-                try:
-                    img = Image.open(image_path)
-                except:
-                    exception_files.append([root, filename])
+    with tqdm(total=file_count, unit_divisor=100, colour='green', bar_format='{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt} Files | Elapsed: {elapsed} | Remaining: {remaining}') as pbar:
+        for root, dirnames, filenames in os.walk(args.path):
+            for filename in filenames:
+                if filename.lower().endswith(filetype):
+                    image_path = root + os.sep + filename
+                    try:
+                        img = Image.open(image_path)
+                    except:
+                        exception_files.append([root, filename])
+                    else:
+                        if filename.lower().endswith('.png'):
+                            colour_space = 'RGBA'
+                        else:
+                            colour_space = 'RGB'
+                        
+                        img.thumbnail(MAX_SIZE, Image.Resampling(args.filter))
+                        if args.colorspace is True:
+                            if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
+                                new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
+                                img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                                img.close()
+                                os.remove(image_path)
+                            else:
+                                img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                                img.close()
+                        else:
+                            if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
+                                new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
+                                img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                                img.close()
+                                os.remove(image_path)
+                            else:
+                                img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                                img.close()
+                        count+=1
+                
                 else:
-                    if filename.lower().endswith('.png'):
-                        colour_space = 'RGBA'
-                    else:
-                        colour_space = 'RGB'
-                    
-                    img.thumbnail(MAX_SIZE, Image.Resampling(args.filter))
-                    if args.colorspace is True:
-                        if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
-                            new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-                            img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                            img.close()
-                            os.remove(image_path)
-                        else:
-                            img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                            img.close()
-                    else:
-                        if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
-                            new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-                            img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                            img.close()
-                            os.remove(image_path)
-                        else:
-                            img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                            img.close()
-                    count+=1
-            
-            else:
-                other_files.append([root, filename])
+                    other_files.append([root, filename])
+                
+                pbar.update(1)
     
     time_exec = (datetime.now() - startTime)
     

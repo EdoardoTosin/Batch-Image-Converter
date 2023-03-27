@@ -20,7 +20,7 @@ colorama.init(autoreset=True)
 
 filetype = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.psd', '.psb')
 
-Image.MAX_IMAGE_PIXELS = None
+Image.MAX_IMAGE_PIXELS = 9e9
 
 def str_filetypes(list_types):
     text = ''

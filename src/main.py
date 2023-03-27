@@ -10,11 +10,13 @@ import re
 import colorama
 from colorama import Fore, Back, Style
 
+__name__        = "Batch-Image-Converter"
+__description__   = "Python script that convert images to a certain dpi, max long side resolution and rgb color space."
 __author__      = "Edoardo Tosin"
 __copyright__   = "Copyright (C) 2022-23 Edoardo Tosin"
 __credits__     = "Edoardo Tosin"
 __license__     = "GPL-3.0"
-__version__     = "1.1.2"
+__version__     = "1.1.3"
 
 colorama.init(autoreset=True)
 
@@ -29,7 +31,7 @@ def str_filetypes(list_types):
         text = text + single_type.strip('.') + spacing
     return text[0:len(text)-len(spacing)]
 
-parser = argparse.ArgumentParser(description=f'Batch image conversion. Filetype: {str_filetypes(filetype)}.', prog=f".{os.sep}"+__file__.split(os.sep)[-1])
+parser = argparse.ArgumentParser(description=f'{__description__} Filetype: {str_filetypes(filetype)}.', prog=f".{os.sep}"+__file__.split(os.sep)[-1])
 group_img = parser.add_argument_group('commands', 'Image conversion properties')
 group_opt = parser.add_argument_group('other options', 'Customize script behaviour (alert and wait)')
 

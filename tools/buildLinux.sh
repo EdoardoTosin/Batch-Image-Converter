@@ -1,1 +1,4 @@
+#!/usr/bin/env bash
+
+python3 -m pip install --user PyInstaller
 python3 -m PyInstaller -D -F -n "Batch-Image-Converter-Linux" --distpath ./ -c './src/main.py'

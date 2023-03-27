@@ -32,9 +32,9 @@ pyinstaller_versionfile.create_versionfile(
     output_file="versionfile.txt",
     version=get_metadata("version"),
     company_name=get_metadata("author"),
-    file_description=get_metadata("credits"),
-    internal_name=basename(directory),
+    file_description=get_metadata("description"),
+    internal_name=get_metadata("name"),
     legal_copyright=get_metadata("copyright"),
     original_filename=get_original_filename(),
-    product_name=basename(directory).replace("-"," ")
+    product_name=get_metadata("name").replace("-"," ")
 )

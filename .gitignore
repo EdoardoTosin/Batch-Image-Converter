@@ -135,3 +135,5 @@ dmypy.json
 Batch-Image-Converter-Linux
 Batch-Image-Converter-Win64.exe
 versionfile.txt
+package-lock.json
+package.json

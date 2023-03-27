@@ -15,7 +15,7 @@ def get_metadata(name):
         return ""
 
 def get_original_filename():
-    buildwin_path = join(directory, "buildWin.ps1")
+    buildwin_path = join(directory, "tools", "buildWin.ps1")
     with open(buildwin_path, 'r') as f:
         matches = []
         for line in f:

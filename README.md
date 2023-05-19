@@ -13,6 +13,8 @@
     <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/edoardotosin/Batch-Image-Converter/total?style=for-the-badge">
     <a href="https://edoardotosin.github.io/Batch-Image-Converter">
         <img alt="GitHub deployments" src="https://img.shields.io/github/deployments/edoardotosin/Batch-Image-Converter/github-pages?label=DEPLOYMENT&style=for-the-badge"></a>
+	<a href="https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/LICENSE">
+		<img alt="GitHub" src="https://img.shields.io/github/license/edoardotosin/Batch-Image-Converter?style=for-the-badge"></a>
 </p>
 
 ## Summary

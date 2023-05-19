@@ -5,6 +5,19 @@
   Batch Image Converter
 </h1>
 
+<p align="center">
+  <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/actions/workflows/build.yml">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/edoardotosin/Batch-Image-Converter/build.yml?style=for-the-badge">
+  </a>
+  <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest">
+    <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/EdoardoTosin/Batch-Image-Converter?label=Latest%20Release&style=for-the-badge">
+  </a>
+  <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/edoardotosin/Batch-Image-Converter/total?style=for-the-badge">
+  <a href="https://edoardotosin.github.io/Batch-Image-Converter">
+    <img alt="GitHub deployments" src="https://img.shields.io/github/deployments/edoardotosin/Batch-Image-Converter/github-pages?label=DEPLOYMENT&style=for-the-badge">
+  </a>
+</p>
+
 ## Summary
 
 Simple script written in Python that converts all images found within the folder where the script is located (and all sub-folders); if the images are not in png or jpg (and jpeg) type, then it converts them to the latter one.  

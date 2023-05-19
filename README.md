@@ -1,21 +1,18 @@
 <h1 align="center">
-  <sub>
-    <img src="https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/logo.png" height="38" width="38">
-  </sub>
-  Batch Image Converter
+    <sub>
+		<img src="https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/logo.png" height="38" width="38">
+	</sub>
+	Batch Image Converter
 </h1>
 
 <p align="center">
-  <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/actions/workflows/build.yml">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/edoardotosin/Batch-Image-Converter/build.yml?style=for-the-badge">
-  </a>
-  <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest">
-    <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/EdoardoTosin/Batch-Image-Converter?label=Latest%20Release&style=for-the-badge">
-  </a>
-  <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/edoardotosin/Batch-Image-Converter/total?style=for-the-badge">
-  <a href="https://edoardotosin.github.io/Batch-Image-Converter">
-    <img alt="GitHub deployments" src="https://img.shields.io/github/deployments/edoardotosin/Batch-Image-Converter/github-pages?label=DEPLOYMENT&style=for-the-badge">
-  </a>
+    <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/actions/workflows/build.yml">
+        <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/edoardotosin/Batch-Image-Converter/build.yml?style=for-the-badge"></a>
+    <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest">
+        <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/EdoardoTosin/Batch-Image-Converter?label=Latest%20Release&style=for-the-badge"></a>
+    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/edoardotosin/Batch-Image-Converter/total?style=for-the-badge">
+    <a href="https://edoardotosin.github.io/Batch-Image-Converter">
+        <img alt="GitHub deployments" src="https://img.shields.io/github/deployments/edoardotosin/Batch-Image-Converter/github-pages?label=DEPLOYMENT&style=for-the-badge"></a>
 </p>
 
 ## Summary

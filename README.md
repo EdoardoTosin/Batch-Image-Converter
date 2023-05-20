@@ -25,7 +25,7 @@ There is the possibility to convert all images to the RGB colour space (Importan
 It also prints out a list of all corrupted images and any other files found.  
 The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.  
 
-> **Warning**: psd and psb file types have not been tested.
+> **Warning**: psd and psb file types have not been fully tested.
 
 ![Output](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/output.jpg)
 
@@ -88,11 +88,14 @@ Portable version can be built with the [`Windows script`](https://raw.githubuser
 ## Usage
 
 ```console
-usage: main.py [-h] [-v] [-p PATH] [-d [1-1000]] [-s [1-10000]] [-f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]]
-                 [--colorspace | --no-colorspace | --cs | --no-cs] [-q [1-100]] [-m [0-10000]] [--optimize | --no-optimize] [--alert | --no-alert]
+usage: main.py [-h] [-v] [-p PATH] [-d [1-1000]] [-s [1-10000]]
+                 [-f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]]
+                 [--colorspace | --no-colorspace | --cs | --no-cs] [-q [1-100]]
+                 [-m [0-10000]] [--optimize | --no-optimize] [--alert | --no-alert]
                  [--wait | --no-wait]
 
-Python script that convert images to a certain dpi, max long side resolution and rgb color space. Filetype: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
+Python script that convert images to a certain dpi, max long side resolution and rgb
+color space. Filetype: jpg, jpeg, png, tif, tiff, bmp, webp, psd, psb.
 
 options:
   -h, --help            show this help message and exit
@@ -101,27 +104,33 @@ options:
 commands:
   Image conversion properties
 
-  -p PATH, --path PATH  path where images are located (default: ".")
+  -p PATH, --path PATH  path where images are located (default:
+                        ".")
   -d [1-1000], --dpi [1-1000]
-                        pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72)
+                        pixel density in pixels per inch (dpi), must be in range 1-1000
+                        (default: 72)
   -s [1-10000], --size [1-10000]
-                        max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000 (default: 1000)
+                        max resolution of image (long side) in pixel (downscaling
+                        only), must be in range 1-10000 (default: 1000)
   -f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos], --filter [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]
-                        type of filter used for downscaling, must be an integer in range 0-5 (default: 0 = Nearest)
+                        type of filter used for downscaling, must be an integer in
+                        range 0-5 (default: 0 = Nearest)
   --colorspace, --no-colorspace, --cs, --no-cs
-                        convert all images to RGB color space (default: False)
+                        convert all images to RGB color space
   -q [1-100], --quality [1-100]
-                        quality of output images, must be in range 1-100 (values above 95 should be avoided) (default: 80)
+                        quality of output images, must be in range 1-100 (values above
+                        95 should be avoided) (default: 80)
   -m [0-10000], --max-image-mpixels [0-10000]
-                        maximum images resolution allowed in Megapixel, (default: 0 [None])
+                        maximum images resolution allowed in Megapixel, (default: 0
+                        [None])
   --optimize, --no-optimize
-                        attempt to compress the palette by eliminating unused colors (default: True)
+                        attempt to compress the palette by eliminating unused colors
 
 other options:
   Customize script behaviour (alert and wait)
 
-  --alert, --no-alert   play alert sound when finished the conversion (default: True)
-  --wait, --no-wait     wait user keypress (Enter) when finished the conversion (default: True)
+  --alert, --no-alert   play alert sound when finished the conversion
+  --wait, --no-wait     wait user keypress (Enter) when finished the conversion
 ```
 
 ## Help 🆘 [-h, --help]
@@ -163,11 +172,16 @@ Usage: `main.py -s 1000`
 
 Set type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = Nearest).
 
-[Filters comparison table](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#filters-comparison-table)
+**[Filters comparison table](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#filters-comparison-table)**
 
-| 0       | 4   | 2        | 5       | 3       | 5       |
-| ------- | --- | -------- | ------- | ------- | ------- |
-| Nearest | Box | Bilinear | Hamming | Bicubic | Lanczos |
+| Value | Filter | Downscaling quality | Upscaling quality | Performance |
+| --- | --- | --- | --- | --- |
+| 0 | [`Resampling.NEAREST`](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.NEAREST "PIL.Image.Resampling.NEAREST") |  |  | ⭐⭐⭐⭐⭐ |
+| 4 | [`Resampling.BOX`](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.BOX "PIL.Image.Resampling.BOX") | ⭐ |  | ⭐⭐⭐⭐ |
+| 2 | [`Resampling.BILINEAR`](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.BILINEAR "PIL.Image.Resampling.BILINEAR") | ⭐ | ⭐ | ⭐⭐⭐ |
+| 5 | [`Resampling.HAMMING`](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.HAMMING "PIL.Image.Resampling.HAMMING") | ⭐⭐ |  | ⭐⭐⭐ |
+| 3 | [`Resampling.BICUBIC`](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.BICUBIC "PIL.Image.Resampling.BICUBIC") | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ |
+| 1 | [`Resampling.LANCZOS`](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.LANCZOS "PIL.Image.Resampling.LANCZOS") | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐ |
 
 Usage: `main.py -f 0`
 

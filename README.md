@@ -23,7 +23,7 @@ Simple script written in Python that converts all images found within the folder
 Among the options there is the possibility of setting the quality, the maximum resolution in pixels of the long side of the image while maintaining the aspect ratio (without upscaling if smaller) and changing the dpi.  
 There is the possibility to convert all images to the RGB colour space (Important: ICC colour profiles are not used for this conversion so switching between different formats may result in incorrect colours).  
 It also prints out a list of all corrupted images and any other files found.  
-The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.  
+The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, webp, psd, psb.  
 
 > **Warning**: psd and psb file types have not been fully tested.
 

@@ -44,9 +44,9 @@
 Among the options there is the possibility of setting the quality, the maximum resolution in pixels of the long side of the image while maintaining the aspect ratio (without upscaling if smaller) and changing the dpi.<br />
 There is the possibility to convert all images to the RGB colour space (Important: ICC colour profiles are not used for this conversion so switching between different formats may result in incorrect colours).<br />
 It also prints out a list of all corrupted images and any other files found.<br />
-The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.</p>
+The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, webp, psd, psb.</p>
 <blockquote>
-<p><strong>Warning</strong>: psd and psb file types have not been tested.</p>
+<p><strong>Warning</strong>: psd and psb file types have not been fully tested.</p>
 </blockquote>
 <p><img src="https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/output.jpg" alt="Output" /></p>
 <h2 id="how-it-works" tabindex="-1"><a id="user-content-how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How it works</h2>
@@ -98,11 +98,14 @@ tqdm&gt;=4.65.0
 <li>Linux: <code>./tools/buildLinux.sh</code></li>
 </ul>
 <h2 id="usage" tabindex="-1"><a id="user-content-usage" class="anchor" href="#usage" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Usage</h2>
-<pre class="language-console"><code class="language-console">usage: main.py [-h] [-v] [-p PATH] [-d [1-1000]] [-s [1-10000]] [-f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]]
-                 [--colorspace | --no-colorspace | --cs | --no-cs] [-q [1-100]] [-m [0-10000]] [--optimize | --no-optimize] [--alert | --no-alert]
+<pre class="language-console"><code class="language-console">usage: main.py [-h] [-v] [-p PATH] [-d [1-1000]] [-s [1-10000]]
+                 [-f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]]
+                 [--colorspace | --no-colorspace | --cs | --no-cs] [-q [1-100]]
+                 [-m [0-10000]] [--optimize | --no-optimize] [--alert | --no-alert]
                  [--wait | --no-wait]
 
-Python script that convert images to a certain dpi, max long side resolution and rgb color space. Filetype: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
+Python script that convert images to a certain dpi, max long side resolution and rgb
+color space. Filetype: jpg, jpeg, png, tif, tiff, bmp, webp, psd, psb.
 
 options:
   -h, --help            show this help message and exit
@@ -111,27 +114,33 @@ options:
 commands:
   Image conversion properties
 
-  -p PATH, --path PATH  path where images are located (default: &quot;.&quot;)
+  -p PATH, --path PATH  path where images are located (default:
+                        &quot;.&quot;)
   -d [1-1000], --dpi [1-1000]
-                        pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72)
+                        pixel density in pixels per inch (dpi), must be in range 1-1000
+                        (default: 72)
   -s [1-10000], --size [1-10000]
-                        max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000 (default: 1000)
+                        max resolution of image (long side) in pixel (downscaling
+                        only), must be in range 1-10000 (default: 1000)
   -f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos], --filter [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]
-                        type of filter used for downscaling, must be an integer in range 0-5 (default: 0 = Nearest)
+                        type of filter used for downscaling, must be an integer in
+                        range 0-5 (default: 0 = Nearest)
   --colorspace, --no-colorspace, --cs, --no-cs
-                        convert all images to RGB color space (default: False)
+                        convert all images to RGB color space
   -q [1-100], --quality [1-100]
-                        quality of output images, must be in range 1-100 (values above 95 should be avoided) (default: 80)
+                        quality of output images, must be in range 1-100 (values above
+                        95 should be avoided) (default: 80)
   -m [0-10000], --max-image-mpixels [0-10000]
-                        maximum images resolution allowed in Megapixel, (default: 0 [None])
+                        maximum images resolution allowed in Megapixel, (default: 0
+                        [None])
   --optimize, --no-optimize
-                        attempt to compress the palette by eliminating unused colors (default: True)
+                        attempt to compress the palette by eliminating unused colors
 
 other options:
   Customize script behaviour (alert and wait)
 
-  --alert, --no-alert   play alert sound when finished the conversion (default: True)
-  --wait, --no-wait     wait user keypress (Enter) when finished the conversion (default: True)
+  --alert, --no-alert   play alert sound when finished the conversion
+  --wait, --no-wait     wait user keypress (Enter) when finished the conversion
 </code></pre>
 <h2 id="help-%F0%9F%86%98-%5B-h%2C---help%5D" tabindex="-1"><a id="user-content-help---h---help" class="anchor" href="#help---h---help" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Help 🆘 [-h, --help]</h2>
 <p>Show help message and exit.</p>
@@ -155,26 +164,59 @@ other options:
 <p>Usage: <code>main.py -s 1000</code></p>
 <h3 id="resize-filter-%5B-f%2C---filter%5D" tabindex="-1"><a id="user-content-resize-filter--f---filter" class="anchor" href="#resize-filter--f---filter" aria-hidden="true"><svg aria-hidden="true" class="octicon octicon-link" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Resize Filter [-f, --filter]</h3>
 <p>Set type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = Nearest).</p>
-<p><a href="https://pillow.readthedocs.io/en/stable/handbook/concepts.html#filters-comparison-table" target="_blank">Filters comparison table</a></p>
+<p><strong><a href="https://pillow.readthedocs.io/en/stable/handbook/concepts.html#filters-comparison-table" target="_blank">Filters comparison table</a></strong></p>
 <table>
 <thead>
 <tr>
-<th>0</th>
-<th>4</th>
-<th>2</th>
-<th>5</th>
-<th>3</th>
-<th>5</th>
+<th>Value</th>
+<th>Filter</th>
+<th>Downscaling quality</th>
+<th>Upscaling quality</th>
+<th>Performance</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Nearest</td>
-<td>Box</td>
-<td>Bilinear</td>
-<td>Hamming</td>
-<td>Bicubic</td>
-<td>Lanczos</td>
+<td>0</td>
+<td><a href="https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.NEAREST" title="PIL.Image.Resampling.NEAREST" target="_blank"><code>Resampling.NEAREST</code></a></td>
+<td></td>
+<td></td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.BOX" title="PIL.Image.Resampling.BOX" target="_blank"><code>Resampling.BOX</code></a></td>
+<td>⭐</td>
+<td></td>
+<td>⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.BILINEAR" title="PIL.Image.Resampling.BILINEAR" target="_blank"><code>Resampling.BILINEAR</code></a></td>
+<td>⭐</td>
+<td>⭐</td>
+<td>⭐⭐⭐</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.HAMMING" title="PIL.Image.Resampling.HAMMING" target="_blank"><code>Resampling.HAMMING</code></a></td>
+<td>⭐⭐</td>
+<td></td>
+<td>⭐⭐⭐</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.BICUBIC" title="PIL.Image.Resampling.BICUBIC" target="_blank"><code>Resampling.BICUBIC</code></a></td>
+<td>⭐⭐⭐</td>
+<td>⭐⭐⭐</td>
+<td>⭐⭐</td>
+</tr>
+<tr>
+<td>1</td>
+<td><a href="https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.Resampling.LANCZOS" title="PIL.Image.Resampling.LANCZOS" target="_blank"><code>Resampling.LANCZOS</code></a></td>
+<td>⭐⭐⭐⭐</td>
+<td>⭐⭐⭐⭐</td>
+<td>⭐</td>
 </tr>
 </tbody>
 </table>

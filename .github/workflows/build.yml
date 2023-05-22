@@ -39,7 +39,7 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-                python3 -m PyInstaller -F -n Batch-Image-Converter-MacOS -i doc/logo.png src/main.py &&
+                python3 -m PyInstaller -F -w -n Batch-Image-Converter-MacOS -i doc/logo.png src/main.py &&
                 cd dist/ &&
                 zip -r9 Batch-Image-Converter-MacOS Batch-Image-Converter-MacOS.app/
             OUT_FILE_NAME: Batch-Image-Converter-MacOS.zip

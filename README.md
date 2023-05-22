@@ -57,7 +57,9 @@ Pillow>=9.4.0
 
 tqdm>=4.65.0
 
-requests>=2.30.0 
+requests>=2.30.0
+
+packaging>=23.1
 ```
 
 ## Instructions

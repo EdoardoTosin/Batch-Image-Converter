@@ -56,6 +56,8 @@ To run the script two modules are required (listed inside [`requirements.txt`](h
 Pillow>=9.4.0
 
 tqdm>=4.65.0
+
+requests>=2.30.0 
 ```
 
 ## Instructions

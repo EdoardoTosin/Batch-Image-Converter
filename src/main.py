@@ -9,12 +9,14 @@ from datetime import datetime
 import re
 import colorama
 from colorama import Fore, Back, Style
+import requests
+from packaging import version
 
 __author__      = "Edoardo Tosin"
 __copyright__   = "Copyright (C) 2022-23 Edoardo Tosin"
 __credits__     = "Edoardo Tosin"
 __license__     = "GPL-3.0"
-__version__     = "1.1.4"
+__version__     = "1.2.0"
 
 colorama.init(autoreset=True)
 
@@ -38,6 +40,12 @@ parser.add_argument(
     "--version",
     action='version',
     version= __version__,
+)
+
+parser.add_argument(
+    "--update",
+    action='store_true',
+    help="check latest version available"
 )
 
 def dir_path(path):
@@ -145,6 +153,21 @@ group_opt.add_argument(
     help="wait user keypress (Enter) when finished the conversion",
 )
 
+def get_update():
+    try:
+        release_path = "/EdoardoTosin/Batch-Image-Converter/releases/latest"
+        api_url = "https://api.github.com/repos" + release_path
+        response = requests.get(api_url)
+        latest_release = response.json()["tag_name"].strip("v")
+        if version.parse(__version__) < version.parse(latest_release):
+            latest_page_url = "https://github.com" + release_path
+            print(f"New Version {latest_release}: {Fore.YELLOW}{latest_page_url}")
+        else:
+            print(f"Available version: {latest_release}, Current version: {__version__}")
+            print(f"Batch-Image-Converter is up to date ({__version__})")
+    except requests.ConnectionError:
+        print(f"{Fore.YELLOW}Unable to check latest version")
+    sys.exit()
 
 def print_init(args):
     
@@ -282,6 +305,9 @@ def main(args):
 
 if __name__ == "__main__":
     try:
-        main(parser.parse_args())
+        if not (parser.parse_args().update):
+            main(parser.parse_args())
+        else:
+            get_update()
     except (KeyboardInterrupt):
         sys.exit()

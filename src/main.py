@@ -305,9 +305,8 @@ def main(args):
 
 if __name__ == "__main__":
     try:
-        if not (parser.parse_args().update):
-            main(parser.parse_args())
-        else:
+        if parser.parse_args().update:
             get_update()
+        main(parser.parse_args())
     except (KeyboardInterrupt):
         sys.exit()

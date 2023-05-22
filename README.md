@@ -100,6 +100,7 @@ color space. Filetype: jpg, jpeg, png, tif, tiff, bmp, webp, psd, psb.
 options:
   -h, --help            show this help message and exit
   -v, --version         show program's version number and exit
+  --update              check latest version available
 
 commands:
   Image conversion properties
@@ -144,6 +145,12 @@ Usage: `main.py -h`
 Show program's version number and exit.
 
 Usage: `main.py -v`
+
+## Update [--update]
+
+Check latest version available.
+
+Usage: `main.py --update`
 
 ## Image conversion properties
 

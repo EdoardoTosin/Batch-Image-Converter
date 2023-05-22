@@ -16,7 +16,7 @@ __author__      = "Edoardo Tosin"
 __copyright__   = "Copyright (C) 2022-23 Edoardo Tosin"
 __credits__     = "Edoardo Tosin"
 __license__     = "GPL-3.0"
-__version__     = "1.2.2"
+__version__     = "1.2.3"
 
 colorama.init(autoreset=True)
 
@@ -305,8 +305,9 @@ def main(args):
 
 if __name__ == "__main__":
     try:
-        if parser.parse_args().update:
+        args = parser.parse_args()
+        if args.update:
             get_update()
-        main(parser.parse_args())
+        main(args)
     except (KeyboardInterrupt):
         sys.exit()

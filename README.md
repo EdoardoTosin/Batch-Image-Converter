@@ -255,7 +255,7 @@ Usage: `main.py --wait` or `main.py --no-wait`
 
 ## Security Policy
 
-For more details see the [SECURITY](https://github.com/EdoardoTosin/ZooMeeting-Redirector/blob/main/SECURITY.md) file.
+For more details see the [SECURITY](https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/SECURITY.md) file.
 
 ## Developing
 

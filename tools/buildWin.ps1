@@ -1,3 +1,4 @@
+python -m pip install --user -r requirements.txt
 python -m pip install --user pyinstaller_versionfile
 python -m pip install --user PyInstaller
 python tools\versionfile_generator.py

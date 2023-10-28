@@ -16,7 +16,7 @@ __author__      = "Edoardo Tosin"
 __copyright__   = "Copyright (C) 2022-23 Edoardo Tosin"
 __credits__     = "Edoardo Tosin"
 __license__     = "GPL-3.0"
-__version__     = "1.2.6"
+__version__     = "1.2.7"
 
 colorama.init(autoreset=True)
 
@@ -165,7 +165,7 @@ def get_update():
         else:
             print(f"Available version: {latest_release}, Current version: {__version__}")
             print(f"Batch-Image-Converter is up to date ({__version__})")
-    except requests.ConnectionError:
+    except:
         print(f"{Fore.YELLOW}Unable to check latest version")
     sys.exit()
 

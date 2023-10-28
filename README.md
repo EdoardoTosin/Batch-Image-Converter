@@ -53,13 +53,15 @@ Python version equal or greater than 3.9 must be installed before following the 
 
 To run the script two modules are required (listed inside [`requirements.txt`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/requirements.txt)):
 ```
-Pillow>=9.4.0
+Pillow
 
-tqdm>=4.65.0
+tqdm
 
-requests>=2.30.0
+requests
 
-packaging>=23.1
+packaging
+
+colorama
 ```
 
 ## Instructions

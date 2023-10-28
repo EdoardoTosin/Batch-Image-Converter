@@ -1,7 +1,9 @@
-Pillow>=9.4.0
+Pillow
 
-tqdm>=4.65.0
+tqdm
 
-requests>=2.30.0
+requests
 
-packaging>=23.1
+packaging
+
+colorama

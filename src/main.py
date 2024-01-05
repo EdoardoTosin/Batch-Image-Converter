@@ -4,13 +4,14 @@ import argparse
 from io import open
 import os, sys
 from tqdm import tqdm
-from PIL import Image#, ImageCms
+from PIL import Image
 from datetime import datetime
 import re
 import colorama
 from colorama import Fore, Back, Style
 import requests
 from packaging import version
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 __author__      = "Edoardo Tosin"
 __copyright__   = "Copyright (C) 2022-23 Edoardo Tosin"
@@ -20,9 +21,12 @@ __version__     = "1.2.7"
 
 colorama.init(autoreset=True)
 
-filetype = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.webp', '.psd', '.psb')
+filetype = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.webp')
 
 Image.MAX_IMAGE_PIXELS = 9e9
+
+exception_files = []
+converted_count = 0
 
 def str_filetypes(list_types):
     text = ''
@@ -202,6 +206,71 @@ def print_init(args):
         print('')
 
 
+def process_image(args, root, filename):
+    
+    if args.max_image_mpixels > 0:
+        Image.MAX_IMAGE_PIXELS = args.max_image_mpixels
+    MAX_SIZE = (args.size, args.size)
+    filters = [Image.Resampling.NEAREST, Image.Resampling.BILINEAR, Image.Resampling.BICUBIC,  Image.Resampling.LANCZOS]
+    DPI = (args.dpi, args.dpi)
+    
+    image_path = os.path.join(root, filename)
+    
+    try:
+        img = Image.open(image_path)
+    except:
+        if [root, filename] not in exception_files:
+            exception_files.append([root, filename])
+    else:
+        if filename.lower().endswith(".png"):
+            colour_space = "RGBA"
+        else:
+            colour_space = "RGB"
+
+        img.thumbnail(MAX_SIZE, Image.Resampling(args.filter))
+        if args.colorspace is True:
+            if not (
+                filename.lower().endswith(".png")
+                or filename.lower().endswith(".jpg")
+                or filename.lower().endswith(".jpeg")
+            ):
+                new_image_path = os.path.splitext(image_path)[0] + ".jpg"
+                img.convert(colour_space).save(
+                    new_image_path,
+                    dpi=DPI,
+                    quality=args.quality,
+                    optimize=args.optimize,
+                )
+                img.close()
+                os.remove(image_path)
+            else:
+                img.convert(colour_space).save(
+                    image_path, dpi=DPI, quality=args.quality, optimize=args.optimize
+                )
+                img.close()
+        else:
+            if not (
+                filename.lower().endswith(".png")
+                or filename.lower().endswith(".jpg")
+                or filename.lower().endswith(".jpeg")
+            ):
+                new_image_path = os.path.splitext(image_path)[0] + ".jpg"
+                img.save(
+                    new_image_path,
+                    dpi=DPI,
+                    quality=args.quality,
+                    optimize=args.optimize,
+                )
+                img.close()
+                os.remove(image_path)
+            else:
+                img.save(
+                    image_path, dpi=DPI, quality=args.quality, optimize=args.optimize
+                )
+                img.close()
+        converted_count += 1
+
+
 def wait_keypress(val):
     
     try:
@@ -215,20 +284,12 @@ def main(args):
     
     print_init(args)
     
-    exception_files = []
     other_files = []
-    if args.max_image_mpixels > 0:
-        Image.MAX_IMAGE_PIXELS = args.max_image_mpixels
-    MAX_SIZE = (args.size, args.size)
-    filters = [Image.Resampling.NEAREST, Image.Resampling.BILINEAR, Image.Resampling.BICUBIC,  Image.Resampling.LANCZOS]
-    DPI = (args.dpi, args.dpi)
-    converted_count = 0
     
-    file_count = 0
-    for _, _, files in os.walk(args.path):
-        for f in files:
-            if f.lower().endswith(filetype):
-                file_count+=1
+    for root, dirnames, filenames in os.walk(args.path):
+        for filename in filenames:
+            if not filename.lower().endswith(filetype):
+                other_files.append([root, filename])
     
     wait_keypress(f"continue or {Back.BLACK}{Style.BRIGHT}CTRL+C{Style.NORMAL}{Back.RESET} to abort")
     
@@ -236,45 +297,14 @@ def main(args):
     
     startTime = datetime.now()
     
-    with tqdm(total=file_count, unit_divisor=100, colour='green', bar_format='{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt} Files | Elapsed: {elapsed} | Remaining: {remaining}') as pbar:
-        for root, dirnames, filenames in os.walk(args.path):
-            for filename in filenames:
-                if filename.lower().endswith(filetype):
-                    image_path = root + os.sep + filename
-                    try:
-                        img = Image.open(image_path)
-                    except:
-                        exception_files.append([root, filename])
-                    else:
-                        if filename.lower().endswith('.png'):
-                            colour_space = 'RGBA'
-                        else:
-                            colour_space = 'RGB'
-                        
-                        img.thumbnail(MAX_SIZE, Image.Resampling(args.filter))
-                        if args.colorspace is True:
-                            if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
-                                new_image_path = os.path.splitext(image_path)[0] + '.jpg'
-                                img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                                img.close()
-                                os.remove(image_path)
-                            else:
-                                img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                                img.close()
-                        else:
-                            if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
-                                new_image_path = os.path.splitext(image_path)[0] + '.jpg'
-                                img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                                img.close()
-                                os.remove(image_path)
-                            else:
-                                img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-                                img.close()
-                        converted_count+=1
-                    pbar.update(1)
-                else:
-                    other_files.append([root, filename])
-
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(process_image, args, root, filename) for root, _, filenames in os.walk(args.path) for filename in filenames if filename.lower().endswith(filetype)]
+        for future in tqdm(as_completed(futures), total=len(futures), unit_divisor=100, colour='green', bar_format='{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt} Files | Elapsed: {elapsed} | Remaining: {remaining}'):
+            try:
+                data = future.result()
+            except Exception as exc:
+                if [root, filename] not in exception_files:
+                    exception_files.append([root, filename])
     
     time_exec = (datetime.now() - startTime)
     
@@ -300,6 +330,7 @@ def main(args):
         for other in other_files:
             if other[1]!=os.path.basename(__file__):
                 print(f"-> {Fore.CYAN}{other[1]}{Style.RESET_ALL} found in {Fore.CYAN}{other[0]}")
+    
     if args.alert is True:
         print('\a', end='')
     if args.wait is True:

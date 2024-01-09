@@ -39,20 +39,20 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-                python3 -m PyInstaller -F -w -n Batch-Image-Converter-MacOS -i doc/logo.png src/main.py &&
+                python3 -m PyInstaller -F -w -n Batch-Image-Converter-MacOS -i assets/logo.png src/main.py &&
                 cd dist/ &&
                 zip -r9 Batch-Image-Converter-MacOS Batch-Image-Converter-MacOS.app/
             OUT_FILE_NAME: Batch-Image-Converter-MacOS.zip
             ASSET_MIME: application/zip
           - os: windows-latest
             TARGET: windows
-            CMD_BUILD: python -m pip install --user pyinstaller_versionfile ; python tools\versionfile_generator.py ; python -m PyInstaller -F -n Batch-Image-Converter-Win64 -i doc\logo.png src/main.py --version-file versionfile.txt
+            CMD_BUILD: python -m pip install --user pyinstaller_versionfile ; python tools\versionfile_generator.py ; python -m PyInstaller -F -n Batch-Image-Converter-Win64 -i assets\logo.png src/main.py --version-file versionfile.txt
             OUT_FILE_NAME: Batch-Image-Converter-Win64.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
           - os: ubuntu-latest
             TARGET: ubuntu
             CMD_BUILD: >
-                python3 -m PyInstaller -F -w -n Batch-Image-Converter-Linux -i doc/logo.png src/main.py &&
+                python3 -m PyInstaller -F -w -n Batch-Image-Converter-Linux -i assets/logo.png src/main.py &&
                 cd dist/ &&
                 tar cfz Batch-Image-Converter-Linux.tar.gz Batch-Image-Converter-Linux
             OUT_FILE_NAME: Batch-Image-Converter-Linux.tar.gz

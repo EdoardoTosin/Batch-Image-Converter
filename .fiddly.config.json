@@ -1,22 +1,22 @@
 {
   "name": "Batch Image Converter",
-  "logo": "https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/logo.png",
+  "logo": "https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/assets/logo.png",
   "noHeader": true,
-  "favicon": "https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/logo.png",
+  "favicon": "https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/assets/logo.png",
   "darkTheme": true,
   "dist": "docs",
   "repo": "https://github.com/EdoardoTosin/Batch-Image-Converter",
-  "styles": "doc/styles.css",
+  "styles": "assets/styles.css",
   "meta": [
     { "name": "author", "content": "Edoardo Tosin" },
-	  { "property": "og:image", "content": "" },
+	  { "property": "og:image", "content": "assets/social-preview.jpg" },
 
     { "property": "og:site_name", "content": "Batch Image Converter" },
 	  { "name": "twitter:card", "content": "summary_large_image" },
 	  { "name": "twitter:image:alt", "content": "Batch Image Converter" },
 
 	  { "itemprop": "name", "content": "Batch Image Converter" },
-	  { "itemprop": "description", "content": "Simple script written in Python that converts all images found within the folder where the script is located." },
+	  { "itemprop": "description", "content": "Streamline your image editing process with this Python script, capable of converting large batches of images to desired formats and specifications, including DPI, resolution, and color space." },
 	  { "itemprop": "image", "content": "" }
   ]
 }

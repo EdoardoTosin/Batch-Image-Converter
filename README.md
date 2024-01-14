@@ -1,227 +1,140 @@
 <h1 align="center">
-  <sub>
-    <img src="https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/logo.png" height="38" width="38">
-  </sub>
-  Batch Image Converter
+    <sub>
+		<img src="https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/assets/logo.png" height="38" width="38">
+	</sub>
+	Batch Image Converter
 </h1>
+
+<p align="center">
+  <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest">
+    <img src="https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/assets/get-it-on-github.png" alt="Get it on GitHub" height=80px></a>
+</p>
+
+<p align="center">
+    <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/actions/workflows/build.yml">
+        <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/edoardotosin/Batch-Image-Converter/build.yml?style=for-the-badge"></a>
+    <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest">
+        <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/EdoardoTosin/Batch-Image-Converter?label=Latest%20Release&style=for-the-badge"></a>
+    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/edoardotosin/Batch-Image-Converter/total?style=for-the-badge">
+    <a href="https://edoardotosin.github.io/Batch-Image-Converter">
+        <img alt="GitHub deployments" src="https://img.shields.io/github/deployments/edoardotosin/Batch-Image-Converter/github-pages?label=DEPLOYMENT&style=for-the-badge"></a>
+	<a href="https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/LICENSE">
+		<img alt="GitHub" src="https://img.shields.io/github/license/edoardotosin/Batch-Image-Converter?style=for-the-badge"></a>
+</p>
 
 ## Summary
 
-Simple script written in Python that converts all images found within the folder where the script is located (and all sub-folders); if the images are not in png or jpg (and jpeg) type, then it converts them to the latter one.  
-Among the options there is the possibility of setting the quality, the maximum resolution in pixels of the long side of the image while maintaining the aspect ratio (without upscaling if smaller) and changing the dpi.  
-There is the possibility to convert all images to the RGB colour space (Important: ICC colour profiles are not used for this conversion so switching between different formats may result in incorrect colours).  
-It also prints out a list of all corrupted images and any other files found.  
-The following formats are recognised: jpg, jpeg, png, tif, tiff, bmp, psd, psb.  
+Python script that enables users to convert images to a specific dpi, maximum long side resolution, and RGB color space. It supports various file types and provides a user-friendly CLI for easy usage. Additionally, it offers precompiled binaries for Linux, Windows, and Mac platforms, allowing users to run the script without installing Python or any dependencies.
 
-> **Warning**: psd and psb file types have not been tested.
+![Output](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/assets/output.jpg)
 
-![Output](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/doc/output.jpg)
+## Features
 
-## How it works
+- Convert images to a specific dpi and maximum long side resolution (Default: 72dpi, 1000px).
+- Convert images to RGB color space (Important: ICC colour profiles are not used for this conversion so switching between different formats may result in incorrect colours).
+- Downscale images using different filters.
+- Compress the palette by eliminating unused colors.
+- Alert user upon completion of conversion.
+- Wait for user keypress upon completion of conversion.
 
-Batch Image Converter search recursively for all recognized images inside the path (included subfolders) and converts them. If there are no arguments given to the script, the following is the normal behaviour:
-- Convert images that are not in jpg, jpeg and png filetype into the former.
-- Path: the folder where the script is located.
-- DPI: 72 dpi.
-- Size: downscaling if bigger than 1000x1000 while mantaining the same aspect ratio.
-- Filter: Downscale filter used is `Nearest`.
-- Color space: No color space conversion to RGB.
-- Quality for saving images: 80.
-- Maximum images resolution allowed in Megapixel: 0 (None).
-- Optimization: Enabled.
-- Alert: Enabled.
-- Wait before exit: Enabled.
-By default the script try to open the images, check the dimension are downscale them to fit into 1000x1000 pixel box if bigger (no upscaling) using the `Nearest` filter. If the images are in other filetypes except png and jpeg (jpg) then it converts them to the latter and delete the original ones (otherwise it overwrites the file in jpg or png). During the saving phase, the script sets the dpi to 72.
+## Download
 
-Default: `main.py --dpi 72 --size 1000 --filter 0 --no-colorspace --quality 80 --optimize --alert --wait`
+There are precompiled binaries for Linux, Windows, and Mac. These binary files allow you to run the script without installing Python or any dependencies. You can download these binaries from the [Releases](https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest) page. After downloading, simply run the binary file to start using the script.
 
-## Requirements
+## Building Binaries
 
-Python version equal or greater than 3.9 must be installed before following the instructions paragraph.
+If you wish to manually build the binaries, the repository contains scripts to do so for both Windows and Linux platforms. 
 
-To run the script two modules are required (listed inside [`requirements.txt`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/src/requirements.txt)):
-```
-Pillow>=9.3.0
+For Windows, navigate to the `Batch-Image-Converter/main/tools/` directory and run the `buildWin.ps1` PowerShell script:
 
-tqdm>=4.64.0
+```powershell
+git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git
+cd Batch-Image-Converter
+.\tools\buildWin.ps1
 ```
 
-## Instructions
+For Linux, navigate to the `Batch-Image-Converter/main/tools/` directory and run the `buildLinux.sh` bash script:
 
-### Linux
+```bash
+git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git
+cd Batch-Image-Converter
+./tools/buildLinux.sh
+```
 
-- `git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git`
-- `cd Batch-Image-Converter/src && python3 -m pip install -r requirements.txt`
-- Copy `main.py` into the folder you want to convert all images.
-- `python3 main.py`
-- Help screen: `python3 main.py -h`
+These scripts will automatically build the binaries for the corresponding platform.
 
-### Windows
+## Running Script with Dependencies
 
-- `git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git`
-- `cd Batch-Image-Converter\src; python -m pip install -r requirements.txt`
-- Copy `main.py` into the folder you want to convert all images.
-- Double click `main.py` to start it with default parameters or launch via terminal with `python main.py`.
-- Help screen: `python main.py -h`
+First, clone the repository:
 
-> **Note**: append the following string before calling main.py script based on your operating system.
->
-> - Linux: `python3`
-> - Windows: `python`
+```bash
+git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git
+```
 
-### Portable version
+Next, navigate into the cloned repository:
 
-Portable version can be built with the [`Windows script`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/buildWin.ps1) and [`Linux script`](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/buildLinux.sh), or downloaded directly from the [Release page](https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest) (with checksums).
+```bash
+cd Batch-Image-Converter
+```
+
+Afterwards, install the required Python packages using the `requirements.txt` file:
+
+```bash
+pip3 install -r requirements.txt
+```
+
+Once you have installed the required packages and are ready to run the script, you need to move the `main.py` file from the `src` directory into the folder where you want to convert images.
+
+On Linux, use the `mv` command:
+
+```bash
+mv src/main.py /path/to/your/folder
+```
+
+On Windows, use the `move` command:
+
+```powershell
+Move-Item -Path "src\main.py" -Destination "\path\to\your\folder"
+```
+
+After moving the `main.py` file, navigate to the folder where you moved the file and run the script:
+
+On Linux:
+
+```bash
+cd /path/to/your/folder
+python3 main.py --help
+```
+
+On Windows:
+
+```powershell
+cd \path\to\your\folder
+python main.py --help
+```
 
 ## Usage
 
-```console
-usage: ./main.py [-h] [-v] [-p PATH] [-d [1-1000]] [-s [1-10000]]
-                 [-f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]]
-                 [--colorspace | --no-colorspace | --cs | --no-cs] [-q [1-100]] [-m [0-10000]]
-                 [--optimize | --no-optimize] [--alert | --no-alert] [--wait | --no-wait]
+The script takes several command line arguments:
 
-Batch image conversion. Filetype: jpg, jpeg, png, tif, tiff, bmp, psd, psb.
+- `-p` or `--path`: Specify the directory where the images are located. Defaults to the current directory.
+- `-d` or `--dpi`: Specify the pixel density in pixels per inch (dpi). Must be in the range 1-1000. Defaults to 72.
+- `-s` or `--size`: Specify the maximum resolution of the image (long side) in pixels. For downscaling only. Must be in the range 1-10000. Defaults to 1000.
+- `-f` or `--filter`: Specify the type of filter used for downscaling. Must be an integer in the range 0-5. Defaults to 0 (Nearest). ([Filters comparison table](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#filters-comparison-table))
+- `--colorspace` or `--cs`: Convert all images to RGB color space.
+- `-q` or `--quality`: Specify the quality of output images. Must be in the range 1-100. Values above 95 should be avoided. Defaults to 80.
+- `-m` or `--max-image-mpixels`: Specify the maximum images resolution allowed in Megapixel. Defaults to 0 (None).
+- `--optimize`: Attempt to compress the palette by eliminating unused colors.
+- `--alert`: Play alert sound when finished the conversion.
+- `--wait`: Wait for user keypress (Enter) when finished the conversion.
 
-options:
-  -h, --help            show this help message and exit
-  -v, --version         show program's version number and exit
+## Security Policy
 
-commands:
-  Image conversion properties
+For more details see the [SECURITY](https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/SECURITY.md) file.
 
-  -p PATH, --path PATH  path where images are located (default: ".")
-  -d [1-1000], --dpi [1-1000]
-                        pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72)
-  -s [1-10000], --size [1-10000]
-                        max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000
-                        (default: 1000)
-  -f [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos], --filter [0 = Nearest, 4 = Box, 2 = Bilinear, 5 = Hamming, 3 = Bicubic, 1 = Lanczos]
-                        type of filter used for downscaling, must be an integer in range 0-5 (default: 0 = Nearest)
-  --colorspace, --no-colorspace, --cs, --no-cs
-                        convert all images to RGB color space
-  -q [1-100], --quality [1-100]
-                        quality of output images, must be in range 1-100 (values above 95 should be avoided) (default:
-                        80)
-  -m [0-10000], --max-image-mpixels [0-10000]
-                        maximum images resolution allowed in Megapixel, (default: 0 [None])
-  --optimize, --no-optimize
-                        attempt to compress the palette by eliminating unused colors
+## Contributing
 
-other options:
-  Customize script behaviour (alert and wait)
-
-  --alert, --no-alert   play alert sound when finished the conversion
-  --wait, --no-wait     wait user keypress (Enter) when finished the conversion
-```
-
-## Help 🆘 [-h, --help]
-
-Show help message and exit.
-
-Usage: `main.py -h`
-
-## Version [-v, --version]
-
-Show program's version number and exit.
-
-Usage: `main.py -v`
-
-## Image conversion properties
-
-### Path [-p, --path]
-
-Set path where images are located (default: Folder where this script is located).
-
-Usage:
-
-- Windows: `main.py -p "C:\Windows\Log"`
-- Linux: `main.py -p "/var/log"`
-
-### Dpi [-d, --dpi]
-
-Set pixel density in pixels per inch (dpi), must be in range 1-1000 (default: 72).
-
-Usage: `main.py -d 72`
-
-### Max Resolution [-s, --size]
-
-Set max resolution of image (long side) in pixel (downscaling only), must be in range 1-10000 (default: 1000).
-
-Usage: `main.py -s 1000`
-
-### Resize Filter [-f, --filter]
-
-Set type of filter used for downscaling, must be an integer in range 0-3 (default: 0 = Nearest).
-
-[Filters comparison table](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#filters-comparison-table)
-
-| 0       | 4   | 2        | 5       | 3       | 5       |
-| ------- | --- | -------- | ------- | ------- | ------- |
-| Nearest | Box | Bilinear | Hamming | Bicubic | Lanczos |
-
-Usage: `main.py -f 0`
-
-### Color space [--colorspace, --no-colorspace, --cs, --no-cs]
-
-Set color space to RGB (default: False).
-
-> **Warning**: converting CYMK to RGB might not be accurate because the script doesn't use the icc profiles.
-
-| True         | False           |
-| ------------ | --------------- |
-| --colorspace | --no-colorspace |
-| --cs         | --no-cs         |
-
-Usage: `main.py --colorspace` or `main.py --no-colorspace`
-
-### Quality [-q, --quality]
-
-Set quality of output images, must be in range 1-100 (values above 95 should be avoided) (default: 80).
-
-Usage: `main.py -q 80`
-
-### Maximum Image MPixels [-m, --max-image-mpixels]
-
-Set maximum images resolution allowed in Megapixel, (default: 0 [None]).
-
-Usage `main.py -m 0`
-
-### Optimize [--optimize, --no-optimize]
-
-Attempt to compress the palette by eliminating unused colors (default: True).
-
-| True       | False         |
-| ---------- | ------------- |
-| --optimize | --no-optimize |
-
-Usage: `main.py --optimize` or `main.py --no-optimize`
-
-## Customize script behaviour
-
-### Alert 🔔 [--alert, --no-alert]
-
-Play alert sound when finished the conversion (default: True).
-
-| True   | False     |
-| ------ | --------- |
-| --mute | --no-mute |
-
-Usage: `main.py --mute`
-
-### Wait ✋ [--wait, --no-wait]
-
-Wait user keypress (`Enter`) when finished the conversion (default: True).
-
-| True   | False     |
-| ------ | --------- |
-| --wait | --no-wait |
-
-Usage: `main.py --wait` or `main.py --no-wait`
-
-## Developing
-
-See [CONTRIBUTING.md](https://github.com/EdoardoTosin/Batch-Image-Converter/tree/main/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/EdoardoTosin/Batch-Image-Converter/tree/main/CONTRIBUTING.md).
 
 ## License
 

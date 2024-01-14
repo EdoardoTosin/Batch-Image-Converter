@@ -9,18 +9,24 @@ from datetime import datetime
 import re
 import colorama
 from colorama import Fore, Back, Style
+import requests
+from packaging import version
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 __author__      = "Edoardo Tosin"
-__copyright__   = "Copyright (C) 2022 Edoardo Tosin"
+__copyright__   = "Copyright (C) 2022-23 Edoardo Tosin"
 __credits__     = "Edoardo Tosin"
 __license__     = "GPL-3.0"
-__version__     = "1.0.0.3"
+__version__     = "1.3.0"
 
 colorama.init(autoreset=True)
 
-filetype = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.psd', '.psb')
+filetype = ('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.webp')
 
-Image.MAX_IMAGE_PIXELS = None
+Image.MAX_IMAGE_PIXELS = 9e9
+
+exception_files = []
+converted_count = 0
 
 def str_filetypes(list_types):
     text = ''
@@ -29,7 +35,7 @@ def str_filetypes(list_types):
         text = text + single_type.strip('.') + spacing
     return text[0:len(text)-len(spacing)]
 
-parser = argparse.ArgumentParser(description=f'Batch image conversion. Filetype: {str_filetypes(filetype)}.', prog=f".{os.sep}"+__file__.split(os.sep)[-1])
+parser = argparse.ArgumentParser(description=f'Python script that convert images to a certain dpi, max long side resolution and rgb color space. Filetype: {str_filetypes(filetype)}.', prog=f".{os.sep}"+__file__.split(os.sep)[-1])
 group_img = parser.add_argument_group('commands', 'Image conversion properties')
 group_opt = parser.add_argument_group('other options', 'Customize script behaviour (alert and wait)')
 
@@ -38,6 +44,12 @@ parser.add_argument(
     "--version",
     action='version',
     version= __version__,
+)
+
+parser.add_argument(
+    "--update",
+    action='store_true',
+    help="check latest version available"
 )
 
 def dir_path(path):
@@ -145,6 +157,21 @@ group_opt.add_argument(
     help="wait user keypress (Enter) when finished the conversion",
 )
 
+def get_update():
+    try:
+        release_path = "/EdoardoTosin/Batch-Image-Converter/releases/latest"
+        api_url = "https://api.github.com/repos" + release_path
+        response = requests.get(api_url)
+        latest_release = response.json()["tag_name"].strip("v")
+        if version.parse(__version__) < version.parse(latest_release):
+            latest_page_url = "https://github.com" + release_path
+            print(f"New Version {latest_release}: {Fore.YELLOW}{latest_page_url}")
+        else:
+            print(f"Available version: {latest_release}, Current version: {__version__}")
+            print(f"Batch-Image-Converter is up to date ({__version__})")
+    except:
+        print(f"{Fore.YELLOW}Unable to check latest version")
+    sys.exit()
 
 def print_init(args):
     
@@ -179,6 +206,61 @@ def print_init(args):
         print('')
 
 
+def process_image(args, root, filename):
+    
+    if args.max_image_mpixels > 0:
+        Image.MAX_IMAGE_PIXELS = args.max_image_mpixels
+    MAX_SIZE = (args.size, args.size)
+    filters = [Image.Resampling.NEAREST, Image.Resampling.BILINEAR, Image.Resampling.BICUBIC,  Image.Resampling.LANCZOS]
+    DPI = (args.dpi, args.dpi)
+    input_profile = 'cmyk.icm'
+	output_profile = 'sRGB Color Space Profile.ICM'
+    image_path = os.path.join(root, filename)
+    
+    try:
+        img = Image.open(image_path)
+    except:
+        if [root, filename] not in exception_files:
+            exception_files.append([root, filename])
+    else:
+        if filename.lower().endswith('.png'):
+            colour_space = 'RGBA'
+        else:
+            colour_space = 'RGB'
+        
+        img.thumbnail(MAX_SIZE, Image.Resampling(args.filter))
+        if args.colorspace is True:
+            if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
+                new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
+                if (img.mode == 'CMYK'):
+                    try:
+                        img = ImageCms.profileToProfile(img, 'USWebCoatedSWOP.icc', 'sRGB Color Space Profile.icm', renderingIntent=0, outputMode='RGB')
+                    except ImageCms.PyCMSError:
+                        pass
+                    img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                else:
+                    img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                os.remove(image_path)
+            else:
+                if (img.mode == 'CMYK'):
+                    try:
+                        img = ImageCms.profileToProfile(img, input_profile, output_profile, renderingIntent=0, outputMode='RGB')
+                    except ImageCms.PyCMSError:
+                        pass
+                    img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                else:
+                    img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+        else:
+            if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
+                new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
+                img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+                os.remove(image_path)
+            else:
+                img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
+        img.close()
+        converted_count += 1
+
+
 def wait_keypress(val):
     
     try:
@@ -192,16 +274,12 @@ def main(args):
     
     print_init(args)
     
-    exception_files = []
     other_files = []
-    if args.max_image_mpixels > 0:
-        Image.MAX_IMAGE_PIXELS = args.max_image_mpixels
-    MAX_SIZE = (args.size, args.size)
-    filters = [Image.Resampling.NEAREST, Image.Resampling.BILINEAR, Image.Resampling.BICUBIC,  Image.Resampling.LANCZOS]
-    DPI = (args.dpi, args.dpi)
-    count = 0
-	input_profile = 'cmyk.icm'
-	output_profile = 'sRGB Color Space Profile.ICM'
+    
+    for root, dirnames, filenames in os.walk(args.path):
+        for filename in filenames:
+            if not filename.lower().endswith(filetype):
+                other_files.append([root, filename])
     
     wait_keypress(f"continue or {Back.BLACK}{Style.BRIGHT}CTRL+C{Style.NORMAL}{Back.RESET} to abort")
     
@@ -209,60 +287,21 @@ def main(args):
     
     startTime = datetime.now()
     
-    for root, dirnames, filenames in tqdm(list(os.walk(args.path)), unit_divisor=100, colour='green', bar_format='{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt} Folders | Elapsed: {elapsed} | Remaining: {remaining}'):
-        for filename in filenames:
-            if filename.lower().endswith(filetype):
-                image_path = root + os.sep + filename
-                try:
-                    img = Image.open(image_path)
-                except:
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(process_image, args, root, filename) for root, _, filenames in os.walk(args.path) for filename in filenames if filename.lower().endswith(filetype)]
+        for future in tqdm(as_completed(futures), total=len(futures), unit_divisor=100, colour='green', bar_format='{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt} Files | Elapsed: {elapsed} | Remaining: {remaining}'):
+            try:
+                data = future.result()
+            except Exception as exc:
+                if [root, filename] not in exception_files:
                     exception_files.append([root, filename])
-                else:
-                    if filename.lower().endswith('.png'):
-                        colour_space = 'RGBA'
-                    else:
-                        colour_space = 'RGB'
-                    
-                    img.thumbnail(MAX_SIZE, Image.Resampling(args.filter))
-                    if args.colorspace is True:
-						if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
-							new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-							if (img.mode == 'CMYK'):
-								try:
-									img = ImageCms.profileToProfile(img, 'USWebCoatedSWOP.icc', 'sRGB Color Space Profile.icm', renderingIntent=0, outputMode='RGB')
-								except ImageCms.PyCMSError:
-									pass
-								img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-							else:
-								img.convert(colour_space).save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-							os.remove(image_path)
-						else:
-							if (img.mode == 'CMYK'):
-								try:
-									img = ImageCms.profileToProfile(img, input_profile, output_profile, renderingIntent=0, outputMode='RGB')
-								except ImageCms.PyCMSError:
-									pass
-								img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-							else:
-								img.convert(colour_space).save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-					else:
-						if not (filename.lower().endswith('.png') or filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg')):
-							new_image_path = image_path.rsplit('.', 1)[0] + '.jpg'
-							img.save(new_image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-							os.remove(image_path)
-						else:
-							img.save(image_path, dpi=DPI, quality=args.quality, optimize=args.optimize)
-					count+=1
-            
-            else:
-                other_files.append([root, filename])
     
     time_exec = (datetime.now() - startTime)
     
     str_time = re.match(r'(.+)\.(.+)', str(time_exec), re.M|re.I).group(1).replace(":", "h ", 1).replace(":", "m ", 1)+'s'
     print(f"\nTime to complete: {Fore.GREEN}{str_time}")
     
-    print(f"Total number of converted images: {Fore.GREEN}{count}")
+    print(f"Total number of converted images: {Fore.GREEN}{converted_count}")
     
     if len(exception_files)>0:
         plural_s = ''
@@ -281,6 +320,7 @@ def main(args):
         for other in other_files:
             if other[1]!=os.path.basename(__file__):
                 print(f"-> {Fore.CYAN}{other[1]}{Style.RESET_ALL} found in {Fore.CYAN}{other[0]}")
+    
     if args.alert is True:
         print('\a', end='')
     if args.wait is True:
@@ -288,5 +328,10 @@ def main(args):
 
 
 if __name__ == "__main__":
-    
-    main(parser.parse_args())
+    try:
+        args = parser.parse_args()
+        if args.update:
+            get_update()
+        main(args)
+    except (KeyboardInterrupt):
+        sys.exit()

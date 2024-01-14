@@ -1,0 +1,9 @@
+Pillow
+
+tqdm
+
+requests
+
+packaging
+
+colorama

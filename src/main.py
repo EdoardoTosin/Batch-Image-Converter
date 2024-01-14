@@ -214,7 +214,7 @@ def process_image(args, root, filename):
     filters = [Image.Resampling.NEAREST, Image.Resampling.BILINEAR, Image.Resampling.BICUBIC,  Image.Resampling.LANCZOS]
     DPI = (args.dpi, args.dpi)
     input_profile = 'cmyk.icm'
-	output_profile = 'sRGB Color Space Profile.ICM'
+    output_profile = 'sRGB Color Space Profile.ICM'
     image_path = os.path.join(root, filename)
     
     try:

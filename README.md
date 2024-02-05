@@ -37,15 +37,15 @@ Python script that enables users to convert images to a specific dpi, maximum lo
 - Alert user upon completion of conversion.
 - Wait for user keypress upon completion of conversion.
 
-## Download
+## Method 1: Download release binary
 
 There are precompiled binaries for Linux, Windows, and Mac. These binary files allow you to run the script without installing Python or any dependencies. You can download these binaries from the [Releases](https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest) page. After downloading, simply run the binary file to start using the script.
 
-## Building Binaries
+## Method 2: Build release binary
 
 If you wish to manually build the binaries, the repository contains scripts to do so for both Windows and Linux platforms. 
 
-For Windows, navigate to the `Batch-Image-Converter/main/tools/` directory and run the `buildWin.ps1` PowerShell script:
+For Windows, from the `Batch-Image-Converter` directory run `buildWin.ps1` PowerShell script as followed:
 
 ```powershell
 git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git
@@ -53,7 +53,7 @@ cd Batch-Image-Converter
 .\tools\buildWin.ps1
 ```
 
-For Linux, navigate to the `Batch-Image-Converter/main/tools/` directory and run the `buildLinux.sh` bash script:
+For Linux, from the `Batch-Image-Converter` directory run `buildLinux.ps1` bash script as followed:
 
 ```bash
 git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git
@@ -63,7 +63,7 @@ cd Batch-Image-Converter
 
 These scripts will automatically build the binaries for the corresponding platform.
 
-## Running Script with Dependencies
+## Method 3: Run with Python3
 
 First, clone the repository:
 

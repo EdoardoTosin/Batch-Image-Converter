@@ -1,9 +1,9 @@
-Pillow
+Pillow >= 10.2.0, == 10.*
 
-tqdm
+tqdm >= 4.66.2, == 4.*
 
-requests
+requests >= 2.31.0, == 2.*
 
-packaging
+packaging >= 24.0, == 24.*
 
-colorama
+colorama >= 0.4.6, == 0.4.*

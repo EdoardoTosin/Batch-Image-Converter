@@ -14,10 +14,10 @@ from packaging import version
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 __author__      = "Edoardo Tosin"
-__copyright__   = "Copyright (C) 2022-23 Edoardo Tosin"
+__copyright__   = "Copyright (C) 2022-24 Edoardo Tosin"
 __credits__     = "Edoardo Tosin"
 __license__     = "GPL-3.0"
-__version__     = "1.3.1"
+__version__     = "1.3.2"
 
 colorama.init(autoreset=True)
 

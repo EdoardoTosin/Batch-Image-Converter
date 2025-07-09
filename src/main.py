@@ -17,7 +17,7 @@ __author__ = "Edoardo Tosin"
 __copyright__ = "Copyright (C) 2022-25 Edoardo Tosin"
 __credits__ = "Edoardo Tosin"
 __license__ = "GPL-3.0"
-__version__ = "1.3.3"
+__version__ = "1.4.0"
 
 colorama.init(autoreset=True)
 

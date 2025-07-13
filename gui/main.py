@@ -13,6 +13,8 @@ import requests
 from packaging import version
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from customtkinter import *
+
 __author__ = "Edoardo Tosin"
 __copyright__ = "Copyright (C) 2022-25 Edoardo Tosin"
 __credits__ = "Edoardo Tosin"
@@ -162,6 +164,10 @@ def get_update():
 
 
 def print_init(args):
+    win = CTk()
+    win.title("Convering proccess")
+    win.geometry("500x500")
+
     filter_names = {
         0: "Nearest",
         1: "Lanczos",
@@ -170,37 +176,50 @@ def print_init(args):
         4: "Box",
         5: "Hamming",
     }
-    print(f"\nRoot folder: {Fore.BLUE}{args.path}\n")
-    print(f"Dpi value: {Fore.BLUE}{args.dpi}")
-    print(f"Max pixel long side: {Fore.BLUE}{args.size}")
-    print(f"Downscaling filter: {Fore.BLUE}{filter_names.get(args.filter)}")
-    print(f"Output image quality: {Fore.BLUE}{args.quality}", end="")
+
+    CTkLabel(win , text=f"\nRoot folder: {args.path}" , text_color="blue" , font=("Arial" , 16)).pack()
+
+    CTkLabel(win , text=f"Dpi value: {args.dpi}" , text_color="blue" , font=("Arial" , 16)).pack()
+
+    CTkLabel(win , text=f"Max pixel long side: {args.size}" , text_color="blue" , font=("Arial" , 16)).pack()
+
+    CTkLabel(win , text=f"Downscaling filter: {filter_names.get(args.filter)}" , text_color="blue" , font=("Arial" , 16)).pack()
+
+    CTkLabel(win , text=f"Output image quality: {args.quality}" , text_color="blue" , font=("Arial" , 16)).pack()
+
     if args.quality > 95:
-        print(
-            f" -> {Fore.YELLOW}WARNING: values above 95 might not decrease file size with hardly any gain in image quality!"
-        )
+        CTkLabel(win , text=f" -> WARNING: values above 95 might not decrease file size with hardly any gain in image quality!" , text_color="yellow" , font=("Arial" , 18)).pack()
+
     else:
         print("")
-    print(f"Color space conversion: {Fore.BLUE}{args.colorspace}", end="")
+
+    CTkLabel(win , text=f"Color space conversion: {args.colorspace}" , text_color="blue" , font=("Arial" , 16)).pack()
+
     if args.colorspace:
         if not os.path.exists(cmyk_profile_path) or not os.path.exists(
             srgb_profile_path
         ):
-            print(
-                f" -> {Fore.YELLOW}WARNING: ICC profile files not found. Skipping CMYK to sRGB conversion."
-            )
+            CTkLabel(win , text=f" -> WARNING: ICC profile files not found. Skipping CMYK to sRGB conversion." , text_color="yellow" , font=("Arial" , 18)).pack()
+
         else:
-            print(
-                f" -> {Fore.YELLOW}WARNING: Colorspace conversion from CMYK to RGB may not be accurate!"
-            )
+            CTkLabel(win , text=f" -> WARNING: Colorspace conversion from CMYK to RGB may not be accurate!" , text_color="yellow" , font=("Arial" , 18)).pack()
     else:
         print("")
-    print(f"Mute alert when finished: {Fore.BLUE}{args.alert}")
-    print(f"Wait after end of conversion: {Fore.BLUE}{args.wait}", end="")
+        
+    CTkLabel(win , text=f"Mute alert when finished: {args.alert}" , text_color="blue" , font=("Arial" , 14)).pack()
+
+    CTkLabel(win , text=f"Wait after end of conversion: {args.wait}" , text_color="blue" , font=("Arial" , 14)).pack()
+
     if args.wait:
-        print(f" -> {Fore.GREEN}Press enter to confirm exit when finished.")
+        # CTkLabel(win , text=f" -> Press enter to confirm exit when finished." , text_color="green" , font=("Arial" , 17)).pack()
+        pass
     else:
         print("")
+
+    close_btn = CTkButton(win , fg_color="green" , text_color="white" , width=250 , height=33 , font=("Arial" , 15) , text="Ok" , corner_radius=10 , hover=False , command=win.destroy)
+    close_btn.pack(pady=30)
+
+    win.mainloop()
 
 
 def convert_to_srgb(img):
@@ -279,8 +298,13 @@ def wait_keypress(val):
 def main(args):
     global cmyk_profile_path
     global srgb_profile_path
-    print_init(args)
+    info = print_init(args)
     other_files = []
+
+    win2 = CTk()
+    win2.title("Convering proccess")
+    win2.geometry("500x500")
+
 
     if args.colorspace and not (
         os.path.exists(cmyk_profile_path) and os.path.exists(srgb_profile_path)
@@ -292,11 +316,13 @@ def main(args):
             if not filename.lower().endswith(filetype):
                 other_files.append([root, filename])
 
-    wait_keypress(
-        f"continue or {Back.BLACK}{Style.BRIGHT}CTRL+C{Style.NORMAL}{Back.RESET} to abort"
-    )
+    CTkLabel(win2 , text="continue or CTRL+C to abort" , font=("Arial" , 25)).pack(pady=20)
 
-    print("\nProcessing images")
+    # wait_keypress(
+    #     f"continue or {Back.BLACK}{Style.BRIGHT}CTRL+C{Style.NORMAL}{Back.RESET} to abort"
+    # )
+
+    CTkLabel(win2 , text="Processing images" , text_color="green" , font=("Arial" , 17)).pack()
 
     start_time = datetime.now()
 
@@ -327,35 +353,32 @@ def main(args):
         .replace(":", "m ", 1)
         + "s"
     )
-    print(f"\nTime to complete: {Fore.GREEN}{str_time}")
-    print(f"Total number of converted images: {Fore.GREEN}{converted_count}")
+
+    CTkLabel(win2 , text=f"Time to complete: {str_time}" , text_color="green" , font=("Arial" , 15)).pack()
+    CTkLabel(win2 , text=f"Total number of converted images: {converted_count}" , text_color="blue" , font=("Arial" , 17)).pack()
 
     if exception_files:
         plural_s = "" if len(exception_files) == 1 else "s"
-        print(
-            f"\n{Fore.RED}{len(exception_files)}{Style.RESET_ALL} Corrupted image{plural_s}:"
-        )
+        CTkLabel(win2 , text=f"{len(exception_files)} Corrupted image{plural_s}" , text_color="pink" , font=("Arial" , 14)).pack()
         for excpt in exception_files:
-            print(
-                f"-> {Fore.RED}{excpt[1]}{Style.RESET_ALL} found in {Fore.RED}{excpt[0]}"
-            )
+            CTkLabel(win2 , text=f"-> {excpt[1]} found in {excpt[0]}" , text_color="pink" , font=("Arial" , 14)).pack()
     else:
-        print("No corrupted images found.")
+        CTkLabel(win2 , text="No corrupted images found." , text_color="red" , font=("Arial" , 16)).pack()
 
     if len(other_files) == 1:
-        print("No other files found.")
+        CTkLabel(win2 , text="No other files found." , text_color="red" , font=("Arial" , 16)).pack()
     else:
-        print("\nOther files (not converted):")
+        CTkLabel(win2 , text="Other files (not converted):" , text_color="red" , font=("Arial" , 16)).pack()
         for other in other_files:
             if other[1] != os.path.basename(__file__):
-                print(
-                    f"-> {Fore.CYAN}{other[1]}{Style.RESET_ALL} found in {Fore.CYAN}{other[0]}"
-                )
+                CTkLabel(win2 , text=f"-> {other[1]} found in {other[0]}" , text_color="blue" , font=("Arial" , 16)).pack()
 
     if args.alert:
         print("\a", end="")
     if args.wait:
         wait_keypress(f"exit")
+
+    win2.mainloop()
 
 
 if __name__ == "__main__":

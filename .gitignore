@@ -141,6 +141,6 @@ node_modules
 package-lock.json
 package.json
 
-# Script
-*.ps1
-*.sh
+# Scripts root path
+/*.ps1
+/*.sh

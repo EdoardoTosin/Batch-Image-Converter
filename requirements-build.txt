@@ -1,1 +1,3 @@
 PyInstaller >= 6.6.0, == 6.6.*
+
+pyinstaller_versionfile >= 3.0.1, == 3.*

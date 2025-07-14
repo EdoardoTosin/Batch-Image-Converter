@@ -67,7 +67,7 @@ def start_proccess(
 
 current_path = sys.argv[0].rsplit(os.sep, 1)[0]
 
-title = CTkLabel(root, text="Convert your images , Quickly", font=("Arial", 30)).pack(
+title = CTkLabel(root, text="Convert your images, Quickly", font=("Arial", 30)).pack(
     pady=30
 )
 

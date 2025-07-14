@@ -1,11 +1,11 @@
-certifi==2025.7.9
-charset-normalizer==3.4.2
-colorama==0.4.6
-customtkinter==5.2.2
-darkdetect==0.8.0
-idna==3.10
-packaging==24.2
-pillow==10.4.0
-requests==2.32.4
-tqdm==4.67.1
-urllib3==2.5.0
+Pillow >= 10.2.0, == 10.*
+
+tqdm >= 4.66.2, == 4.*
+
+requests >= 2.31.0, == 2.*
+
+packaging >= 24.0, == 24.*
+
+colorama >= 0.4.6, == 0.4.*
+
+customtkinter >= 5.2.2, == 5.*

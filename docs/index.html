@@ -28,9 +28,12 @@
     <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
     <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
     <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css" />
+    <link type="text/css" rel="stylesheet" href="assets/css/new_styles.css">
 </head>
 
 <body>
+    <div id="particles-js"></div>
+
     <article class="markdown-body">
         <h1 align="center">
             <sub>
@@ -54,6 +57,23 @@
             <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/LICENSE">
                 <img alt="GitHub" src="https://img.shields.io/github/license/edoardotosin/Batch-Image-Converter?style=for-the-badge"></a>
         </p>
+
+
+        <h3 style="text-align: center;">Contents</h3>
+
+        <div class="menu">
+            <ul>
+                <li><a href="#summary">Summary</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#method-1-download-release-binary">Release binary</a></li>
+                <li><a href="#method-2-build-release-binary">Build release binary</a></li>
+                <li><a href="#method-3-run-with-python3">Run with python</a></li>
+                <li><a href="#usage">Usage</a></li>
+                <li><a href="#security-policy">Security Policy</a></li>
+                <li><a href="#contributing">Contributing</a></li>
+                <li><a href="#licence">Licence</a></li>
+            </ul>
+        </div>
 
         <h2 id="summary">
             <a class="header-link" href="#summary"></a>Summary</h2>
@@ -125,10 +145,18 @@ python main.py -<span class="hljs-literal">-help</span></code></pre>
         <h2 id="contributing">
             <a class="header-link" href="#contributing"></a>Contributing</h2>
         <p>See <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/tree/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+        <p>
+            After being merged, your changes and pull requests will reside in the dev branch until they are finalized and ready for release. The dev branch serves as the development version of the project and may occasionally contain bugs or incomplete features. You are welcome to use this branch for testing, reviewing, and collaboration.
+        </p>
         <h2 id="license">
             <a class="header-link" href="#license"></a>License</h2>
         <p>This software is released under the terms of the GNU General Public License v3.0. See the <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/tree/main/LICENSE">LICENSE</a> file for further information.</p>
     </article>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS.load('particles-js', 'particles.json');
+    </script>
 </body>
 
 </html>

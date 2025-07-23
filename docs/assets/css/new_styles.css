@@ -1,0 +1,26 @@
+.menu ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 17px;
+    list-style: none;
+
+  a {
+    text-decoration: underline;
+    transition: 0.3s;
+  }
+
+  a:hover {
+    color: #3b3ba5;
+  }
+}
+
+#particles-js {
+    position: fixed;
+    height: 100%;
+    top: 140px;
+    left: 50px;
+    z-index: -99;
+}

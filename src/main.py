@@ -1,19 +1,28 @@
-#!/usr/bin/env python3
+"""Main CLI and backend image conversion logic for the Batch Image Converter."""
 
-import argparse
 import os
 import sys
-from tqdm import tqdm
-from PIL import Image, ImageCms
-from datetime import datetime
 import re
+import argparse
+from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from customtkinter import CTk, CTkLabel, CTkButton
+
+from packaging import version
+import requests
+from tqdm import tqdm
 import colorama
 from colorama import Fore, Back, Style
-import requests
-from packaging import version
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from PIL import Image, ImageCms
 
-from customtkinter import *
+from constants import (
+    FILTER_NAMES,
+    CMYK_PROFILE_PATH,
+    SRGB_PROFILE_PATH,
+    EXCEPTION_FILES,
+    FILETYPE,
+)
+
 
 __author__ = "Edoardo Tosin"
 __copyright__ = "Copyright (C) 2022-25 Edoardo Tosin"
@@ -23,23 +32,22 @@ __version__ = "1.4.0"
 
 colorama.init(autoreset=True)
 
-filetype = (".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp", ".webp")
 Image.MAX_IMAGE_PIXELS = 9e9
-
-cmyk_profile_path = "USWebCoatedSWOP.icc"
-srgb_profile_path = "sRGB.icc"
-
-exception_files = []
-converted_count = 0
 
 
 def str_filetypes(list_types):
+    """
+    Convert a list of file extensions into a comma-separated
+    string without leading dots.
+    """
     return ", ".join(t.strip(".") for t in list_types)
 
 
 parser = argparse.ArgumentParser(
-    description=f"Python script that converts images to a certain dpi, max long side resolution and RGB color space. Filetype: {str_filetypes(filetype)}.",
-    prog=f".{os.sep}" + __file__.split(os.sep)[-1],
+    description="Python script that converts images to a certain dpi, "
+    "max long side resolution and RGB color space. "
+    f"Filetype: {str_filetypes(FILETYPE)}.",
+    prog=f".{os.sep}" + __file__.rsplit(os.sep, maxsplit=1)[-1],
 )
 group_img = parser.add_argument_group("commands", "Image conversion properties")
 group_opt = parser.add_argument_group(
@@ -53,10 +61,10 @@ parser.add_argument(
 
 
 def dir_path(path):
+    """Validate that a given path is a directory."""
     if os.path.isdir(path):
         return path
-    else:
-        raise argparse.ArgumentTypeError(f'"{path}" is not a valid path')
+    raise argparse.ArgumentTypeError(f'"{path}" is not a valid path')
 
 
 current_path = sys.argv[0].rsplit(os.sep, 1)[0]
@@ -145,44 +153,38 @@ group_opt.add_argument(
 
 
 def get_update():
+    """Check GitHub for the latest version of the application."""
     try:
         release_path = "/EdoardoTosin/Batch-Image-Converter/releases/latest"
         api_url = "https://api.github.com/repos" + release_path
-        response = requests.get(api_url)
+        response = requests.get(api_url, timeout=10)
         latest_release = response.json()["tag_name"].strip("v")
         if version.parse(__version__) < version.parse(latest_release):
             latest_page_url = "https://github.com" + release_path
             print(f"New Version {latest_release}: {Fore.YELLOW}{latest_page_url}")
         else:
             print(
-                f"Available version: {latest_release}, Current version: {__version__}"
+                f"Available version: {latest_release}, "
+                "Current version: {__version__}"
             )
             print(f"Batch-Image-Converter is up to date ({__version__})")
-    except:
+    except (ValueError, OSError) as _:
         print(f"{Fore.YELLOW}Unable to check latest version")
     sys.exit()
 
 
 def print_init(args):
+    """Display initial settings and warningsin a GUI before conversion starts."""
     win = CTk()
     win.title("Convering proccess")
     win.geometry("500x500")
-
-    filter_names = {
-        0: "Nearest",
-        1: "Lanczos",
-        2: "Bilinear",
-        3: "Bicubic",
-        4: "Box",
-        5: "Hamming",
-    }
 
     CTkLabel(
         win, text=f"\nRoot folder: {args.path}", text_color="blue", font=("Arial", 16)
     ).pack()
 
     CTkLabel(
-        win, text=f"Dpi value: {args.dpi}", text_color="blue", font=("Arial", 16)
+        win, text=f"dpi value: {args.dpi}", text_color="blue", font=("Arial", 16)
     ).pack()
 
     CTkLabel(
@@ -194,7 +196,7 @@ def print_init(args):
 
     CTkLabel(
         win,
-        text=f"Downscaling filter: {filter_names.get(args.filter)}",
+        text=f"Downscaling filter: {FILTER_NAMES.get(args.filter)}",
         text_color="blue",
         font=("Arial", 16),
     ).pack()
@@ -209,7 +211,8 @@ def print_init(args):
     if args.quality > 95:
         CTkLabel(
             win,
-            text=f" -> WARNING: values above 95 might not decrease file size with hardly any gain in image quality!",
+            text=" -> WARNING: values above 95 might not decrease"
+            "file size with hardly any gain in image quality!",
             text_color="yellow",
             font=("Arial", 18),
         ).pack()
@@ -225,12 +228,13 @@ def print_init(args):
     ).pack()
 
     if args.colorspace:
-        if not os.path.exists(cmyk_profile_path) or not os.path.exists(
-            srgb_profile_path
+        if not os.path.exists(CMYK_PROFILE_PATH) or not os.path.exists(
+            SRGB_PROFILE_PATH
         ):
             CTkLabel(
                 win,
-                text=f" -> WARNING: ICC profile files not found. Skipping CMYK to sRGB conversion.",
+                text=" -> WARNING: ICC profile files not found. "
+                "Skipping CMYK to sRGB conversion.",
                 text_color="yellow",
                 font=("Arial", 18),
             ).pack()
@@ -238,7 +242,8 @@ def print_init(args):
         else:
             CTkLabel(
                 win,
-                text=f" -> WARNING: Colorspace conversion from CMYK to RGB may not be accurate!",
+                text=" -> WARNING: Colorspace conversion from CMYK"
+                "to RGB may not be accurate!",
                 text_color="yellow",
                 font=("Arial", 18),
             ).pack()
@@ -259,10 +264,7 @@ def print_init(args):
         font=("Arial", 14),
     ).pack()
 
-    if args.wait:
-        # CTkLabel(win , text=f" -> Press enter to confirm exit when finished." , text_color="green" , font=("Arial" , 17)).pack()
-        pass
-    else:
+    if not args.wait:
         print("")
 
     close_btn = CTkButton(
@@ -283,38 +285,40 @@ def print_init(args):
 
 
 def convert_to_srgb(img):
-    global cmyk_profile_path
-    global srgb_profile_path
+    """Convert CMYK image to sRGB color profile using ICC profiles."""
     img = ImageCms.profileToProfile(
-        img, cmyk_profile_path, srgb_profile_path, outputMode="RGB"
+        img, CMYK_PROFILE_PATH, SRGB_PROFILE_PATH, outputMode="RGB"
     )
     return img
 
 
-def process_image(args, root, filename):
-    global converted_count
+def process_image(args, root, filename, converted_counter):
+    """
+    Process a single image: resizing, converting color, saving with
+    quality and DPI settings.
+    """
     if args.max_image_mpixels > 0:
         Image.MAX_IMAGE_PIXELS = args.max_image_mpixels
-    MAX_SIZE = (args.size, args.size)
-    DPI = (args.dpi, args.dpi)
+    max_size = (args.size, args.size)
+    dpi = (args.dpi, args.dpi)
 
     image_path = os.path.join(root, filename)
 
     try:
         img = Image.open(image_path)
-    except:
-        exception_files.append([root, filename])
+    except (ValueError, OSError) as _:
+        EXCEPTION_FILES.append([root, filename])
     else:
         if args.colorspace and img.mode == "CMYK":
             img = convert_to_srgb(img)
 
-        img.thumbnail(MAX_SIZE, Image.Resampling(args.filter))
+        img.thumbnail(max_size, Image.Resampling(args.filter))
         if args.colorspace:
             if not filename.lower().endswith((".png", ".jpg", ".jpeg")):
                 new_image_path = os.path.splitext(image_path)[0] + ".jpg"
                 img.save(
                     new_image_path,
-                    dpi=DPI,
+                    dpi=dpi,
                     quality=args.quality,
                     optimize=args.optimize,
                 )
@@ -322,7 +326,7 @@ def process_image(args, root, filename):
                 os.remove(image_path)
             else:
                 img.save(
-                    image_path, dpi=DPI, quality=args.quality, optimize=args.optimize
+                    image_path, dpi=dpi, quality=args.quality, optimize=args.optimize
                 )
                 img.close()
         else:
@@ -330,7 +334,7 @@ def process_image(args, root, filename):
                 new_image_path = os.path.splitext(image_path)[0] + ".jpg"
                 img.save(
                     new_image_path,
-                    dpi=DPI,
+                    dpi=dpi,
                     quality=args.quality,
                     optimize=args.optimize,
                 )
@@ -338,16 +342,18 @@ def process_image(args, root, filename):
                 os.remove(image_path)
             else:
                 img.save(
-                    image_path, dpi=DPI, quality=args.quality, optimize=args.optimize
+                    image_path, dpi=dpi, quality=args.quality, optimize=args.optimize
                 )
                 img.close()
-        converted_count += 1
+        converted_counter["count"] += 1
 
 
 def wait_keypress(val):
+    """Pause the program and wait for a keypress from the user."""
     try:
         print(
-            f"\n{Fore.YELLOW}Press {Back.BLACK}{Style.BRIGHT}Enter{Style.NORMAL}{Back.RESET} to {val}{Style.RESET_ALL}",
+            f"\n{Fore.YELLOW}Press {Back.BLACK}{Style.BRIGHT}"
+            f"Enter{Style.NORMAL}{Back.RESET} to {val}{Style.RESET_ALL}",
             end="",
         )
         input()
@@ -356,9 +362,8 @@ def wait_keypress(val):
 
 
 def main(args):
-    global cmyk_profile_path
-    global srgb_profile_path
-    info = print_init(args)
+    """Execute the batch image conversion process using given arguments."""
+    print_init(args)
     other_files = []
 
     win2 = CTk()
@@ -366,13 +371,13 @@ def main(args):
     win2.geometry("500x500")
 
     if args.colorspace and not (
-        os.path.exists(cmyk_profile_path) and os.path.exists(srgb_profile_path)
+        os.path.exists(CMYK_PROFILE_PATH) and os.path.exists(SRGB_PROFILE_PATH)
     ):
         args.colorspace = False
 
     for root, _, filenames in os.walk(args.path):
         for filename in filenames:
-            if not filename.lower().endswith(filetype):
+            if not filename.lower().endswith(FILETYPE):
                 other_files.append([root, filename])
 
     CTkLabel(win2, text="continue or CTRL+C to abort", font=("Arial", 25)).pack(pady=20)
@@ -385,26 +390,32 @@ def main(args):
         win2, text="Processing images", text_color="green", font=("Arial", 17)
     ).pack()
 
+    converted_counter = {"count": 0}
     start_time = datetime.now()
 
     with ThreadPoolExecutor() as executor:
-        futures = [
-            executor.submit(process_image, args, root, filename)
+        futures = {
+            executor.submit(process_image, args, root, filename, converted_counter): (
+                root,
+                filename,
+            )
             for root, _, filenames in os.walk(args.path)
             for filename in filenames
-            if filename.lower().endswith(filetype)
-        ]
+            if filename.lower().endswith(FILETYPE)
+        }
         for future in tqdm(
             as_completed(futures),
             total=len(futures),
             unit_divisor=100,
             colour="green",
-            bar_format="{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt} Files | Elapsed: {elapsed} | Remaining: {remaining}",
+            bar_format="{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt}"
+            " Files | Elapsed: {elapsed} | Remaining: {remaining}",
         ):
+            root, filename = futures[future]
             try:
                 future.result()
-            except Exception as exc:
-                exception_files.append([root, filename])
+            except (ValueError, OSError) as _:
+                EXCEPTION_FILES.append([root, filename])
 
     time_exec = datetime.now() - start_time
     str_time = (
@@ -423,20 +434,20 @@ def main(args):
     ).pack()
     CTkLabel(
         win2,
-        text=f"Total number of converted images: {converted_count}",
+        text=f"Total number of converted images: {converted_counter['count']}",
         text_color="blue",
         font=("Arial", 17),
     ).pack()
 
-    if exception_files:
-        plural_s = "" if len(exception_files) == 1 else "s"
+    if EXCEPTION_FILES:
+        plural_s = "" if len(EXCEPTION_FILES) == 1 else "s"
         CTkLabel(
             win2,
-            text=f"{len(exception_files)} Corrupted image{plural_s}",
+            text=f"{len(EXCEPTION_FILES)} Corrupted image{plural_s}",
             text_color="pink",
             font=("Arial", 14),
         ).pack()
-        for excpt in exception_files:
+        for excpt in EXCEPTION_FILES:
             CTkLabel(
                 win2,
                 text=f"-> {excpt[1]} found in {excpt[0]}",
@@ -474,16 +485,16 @@ def main(args):
     if args.alert:
         print("\a", end="")
     if args.wait:
-        wait_keypress(f"exit")
+        wait_keypress("exit")
 
     win2.mainloop()
 
 
 if __name__ == "__main__":
     try:
-        args = parser.parse_args()
-        if args.update:
+        cli_args = parser.parse_args()
+        if cli_args.update:
             get_update()
-        main(args)
+        main(cli_args)
     except KeyboardInterrupt:
         sys.exit()

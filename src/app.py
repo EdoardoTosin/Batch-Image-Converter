@@ -8,6 +8,7 @@ from tkinter import filedialog, messagebox
 import customtkinter as ctk
 
 from gui_args import Process
+from main import set_gui_mode
 
 # Set appearance mode and color theme
 ctk.set_appearance_mode("system")
@@ -20,8 +21,8 @@ class BatchImageConverterApp:
     def __init__(self):
         self.root = ctk.CTk()
         self.root.title("Batch Image Converter")
-        self.root.geometry("900x850")
-        self.root.minsize(800, 800)
+        self.root.geometry("900x950")
+        self.root.minsize(800, 900)
 
         # Center the window
         self.center_window()
@@ -54,6 +55,10 @@ class BatchImageConverterApp:
         self.start_btn = None
         self.reset_btn = None
         self.conversion_thread = None
+        self.log_textbox = None
+
+        # Set GUI mode for main.py
+        set_gui_mode(True, self.log_message)
 
         # Create GUI elements
         self.create_widgets()
@@ -66,6 +71,16 @@ class BatchImageConverterApp:
         x = (self.root.winfo_screenwidth() // 2) - (width // 2)
         y = (self.root.winfo_screenheight() // 2) - (height // 2)
         self.root.geometry(f"{width}x{height}+{x}+{y}")
+
+    def log_message(self, message):
+        """Add a message to the log textbox."""
+        if self.log_textbox and self.root.winfo_exists():
+
+            def update_log():
+                self.log_textbox.insert("end", message + "\n")
+                self.log_textbox.see("end")
+
+            self.root.after(0, update_log)
 
     def create_widgets(self):
         """Create and arrange all GUI widgets"""
@@ -90,8 +105,8 @@ class BatchImageConverterApp:
         subtitle_label.pack(pady=(0, 30))
 
         # Create scrollable frame for inputs
-        self.scrollable_frame = ctk.CTkScrollableFrame(main_frame, height=400)
-        self.scrollable_frame.pack(fill="both", expand=True, pady=(0, 20))
+        self.scrollable_frame = ctk.CTkScrollableFrame(main_frame, height=300)
+        self.scrollable_frame.pack(fill="x", pady=(0, 20))
 
         # Path selection section
         self.create_path_section()
@@ -108,6 +123,9 @@ class BatchImageConverterApp:
         # Progress bar (initially hidden)
         self.progress_bar = ctk.CTkProgressBar(main_frame)
         self.progress_label = ctk.CTkLabel(main_frame, text="")
+
+        # Log section
+        self.create_log_section(main_frame)
 
     def create_path_section(self):
         """Create path selection section"""
@@ -265,13 +283,14 @@ class BatchImageConverterApp:
         )
         self.alert_cb.grid(row=1, column=0, sticky="w", pady=5)
 
-        # Wait for keypress
+        # Wait for keypress (disabled in GUI mode, but kept for consistency)
         self.wait_var = ctk.BooleanVar(value=False)
         self.wait_cb = ctk.CTkCheckBox(
             checkboxes_frame,
             text="Wait for keypress when done",
             variable=self.wait_var,
             font=ctk.CTkFont(size=14),
+            state="disabled",  # Disabled in GUI mode
         )
         self.wait_cb.grid(row=1, column=1, sticky="w", pady=5)
 
@@ -303,6 +322,49 @@ class BatchImageConverterApp:
         )
         self.reset_btn.pack(side="right", padx=(5, 0))
 
+        # Clear log button
+        clear_log_btn = ctk.CTkButton(
+            button_frame,
+            text="🗑️ Clear Log",
+            command=self.clear_log,
+            height=50,
+            font=ctk.CTkFont(size=16),
+            fg_color=("gray70", "gray30"),
+            hover_color=("gray60", "gray40"),
+            width=120,
+        )
+        clear_log_btn.pack(side="right", padx=(5, 0))
+
+    def create_log_section(self, parent):
+        """Create log display section"""
+        log_frame = ctk.CTkFrame(parent)
+        log_frame.pack(fill="both", expand=True, pady=(10, 0))
+
+        log_title = ctk.CTkLabel(
+            log_frame,
+            text="📋 Conversion Log",
+            font=ctk.CTkFont(size=18, weight="bold"),
+        )
+        log_title.pack(pady=(15, 10))
+
+        # Log textbox
+        self.log_textbox = ctk.CTkTextbox(
+            log_frame,
+            height=200,
+            font=ctk.CTkFont(size=12, family="Consolas"),
+            wrap="word",
+        )
+        self.log_textbox.pack(fill="both", expand=True, padx=15, pady=(0, 15))
+
+        # Initial log message
+        self.log_textbox.insert("0.0", "Ready to convert images...\n")
+
+    def clear_log(self):
+        """Clear the log textbox"""
+        if self.log_textbox:
+            self.log_textbox.delete("0.0", "end")
+            self.log_textbox.insert("0.0", "Log cleared...\n")
+
     def browse_directory(self):
         """Open file dialog to select directory"""
         directory = filedialog.askdirectory(
@@ -327,6 +389,11 @@ class BatchImageConverterApp:
         self.optimize_var.set(True)
         self.alert_var.set(False)
         self.wait_var.set(False)
+
+        # Clear and reset log
+        if self.log_textbox:
+            self.log_textbox.delete("0.0", "end")
+            self.log_textbox.insert("0.0", "Form reset. Ready to convert images...\n")
 
     def validate_inputs(self):
         """Validate all input fields"""
@@ -408,6 +475,9 @@ class BatchImageConverterApp:
         ):
             return
 
+        # Clear log and start conversion
+        self.log_textbox.delete("0.0", "end")
+
         # Start conversion in thread
         self.conversion_thread = threading.Thread(
             target=self.start_conversion, daemon=True
@@ -446,14 +516,6 @@ class BatchImageConverterApp:
             # Run conversion
             process.run()
 
-            # Show success message
-            self.root.after(
-                0,
-                lambda: messagebox.showinfo(
-                    "Success", "Image conversion completed successfully!"
-                ),
-            )
-
         except (ValueError, OSError, RuntimeError) as e:
             # Show error message
             self.root.after(
@@ -486,7 +548,7 @@ class BatchImageConverterApp:
         """Start the application"""
         try:
             self.root.mainloop()
-        except Exception as e:
+        except:
             self.root.quit()
 
 

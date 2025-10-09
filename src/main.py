@@ -6,7 +6,7 @@ import re
 import argparse
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from customtkinter import CTk, CTkLabel, CTkButton
+from tkinter import messagebox
 
 from packaging import version
 import requests
@@ -33,6 +33,33 @@ __version__ = "1.4.0"
 colorama.init(autoreset=True)
 
 Image.MAX_IMAGE_PIXELS = 9e9
+
+# Global variable to track if running in GUI mode
+GUI_MODE = False
+GUI_LOG_CALLBACK = None
+
+
+def set_gui_mode(enabled=True, log_callback=None):
+    """Set GUI mode and logging callback."""
+    global GUI_MODE, GUI_LOG_CALLBACK
+    GUI_MODE = enabled
+    GUI_LOG_CALLBACK = log_callback
+
+
+def log_message(message, color="white"):
+    """Log message to either console or GUI depending on mode."""
+    if GUI_MODE and GUI_LOG_CALLBACK:
+        GUI_LOG_CALLBACK(message)
+    else:
+        # Console mode - use colorama colors
+        color_map = {
+            "blue": Fore.BLUE,
+            "green": Fore.GREEN,
+            "yellow": Fore.YELLOW,
+            "red": Fore.RED,
+            "white": Fore.WHITE,
+        }
+        print(f"{color_map.get(color, Fore.WHITE)}{message}{Style.RESET_ALL}")
 
 
 def str_filetypes(list_types):
@@ -161,127 +188,51 @@ def get_update():
         latest_release = response.json()["tag_name"].strip("v")
         if version.parse(__version__) < version.parse(latest_release):
             latest_page_url = "https://github.com" + release_path
-            print(f"New Version {latest_release}: {Fore.YELLOW}{latest_page_url}")
+            log_message(f"New Version {latest_release}: {latest_page_url}", "yellow")
         else:
-            print(
-                f"Available version: {latest_release}, "
-                "Current version: {__version__}"
+            log_message(
+                f"Available version: {latest_release}, Current version: {__version__}"
             )
-            print(f"Batch-Image-Converter is up to date ({__version__})")
+            log_message(f"Batch-Image-Converter is up to date ({__version__})")
     except (ValueError, OSError) as _:
-        print(f"{Fore.YELLOW}Unable to check latest version")
+        log_message("Unable to check latest version", "yellow")
     sys.exit()
 
 
 def print_init(args):
-    """Display initial settings and warningsin a GUI before conversion starts."""
-    win = CTk()
-    win.title("Convering proccess")
-    win.geometry("500x500")
-
-    CTkLabel(
-        win, text=f"\nRoot folder: {args.path}", text_color="blue", font=("Arial", 16)
-    ).pack()
-
-    CTkLabel(
-        win, text=f"dpi value: {args.dpi}", text_color="blue", font=("Arial", 16)
-    ).pack()
-
-    CTkLabel(
-        win,
-        text=f"Max pixel long side: {args.size}",
-        text_color="blue",
-        font=("Arial", 16),
-    ).pack()
-
-    CTkLabel(
-        win,
-        text=f"Downscaling filter: {FILTER_NAMES.get(args.filter)}",
-        text_color="blue",
-        font=("Arial", 16),
-    ).pack()
-
-    CTkLabel(
-        win,
-        text=f"Output image quality: {args.quality}",
-        text_color="blue",
-        font=("Arial", 16),
-    ).pack()
+    """Display initial settings and warnings before conversion starts."""
+    log_message("=== Conversion Settings ===", "blue")
+    log_message(f"Root folder: {args.path}", "blue")
+    log_message(f"DPI value: {args.dpi}", "blue")
+    log_message(f"Max pixel long side: {args.size}", "blue")
+    log_message(f"Downscaling filter: {FILTER_NAMES.get(args.filter)}", "blue")
+    log_message(f"Output image quality: {args.quality}", "blue")
 
     if args.quality > 95:
-        CTkLabel(
-            win,
-            text=" -> WARNING: values above 95 might not decrease"
-            "file size with hardly any gain in image quality!",
-            text_color="yellow",
-            font=("Arial", 18),
-        ).pack()
+        log_message(
+            "WARNING: Values above 95 might not decrease file size with hardly any gain in image quality!",
+            "yellow",
+        )
 
-    else:
-        print("")
-
-    CTkLabel(
-        win,
-        text=f"Color space conversion: {args.colorspace}",
-        text_color="blue",
-        font=("Arial", 16),
-    ).pack()
+    log_message(f"Color space conversion: {args.colorspace}", "blue")
 
     if args.colorspace:
         if not os.path.exists(CMYK_PROFILE_PATH) or not os.path.exists(
             SRGB_PROFILE_PATH
         ):
-            CTkLabel(
-                win,
-                text=" -> WARNING: ICC profile files not found. "
-                "Skipping CMYK to sRGB conversion.",
-                text_color="yellow",
-                font=("Arial", 18),
-            ).pack()
-
+            log_message(
+                "WARNING: ICC profile files not found. Skipping CMYK to sRGB conversion.",
+                "yellow",
+            )
         else:
-            CTkLabel(
-                win,
-                text=" -> WARNING: Colorspace conversion from CMYK"
-                "to RGB may not be accurate!",
-                text_color="yellow",
-                font=("Arial", 18),
-            ).pack()
-    else:
-        print("")
+            log_message(
+                "WARNING: Colorspace conversion from CMYK to RGB may not be accurate!",
+                "yellow",
+            )
 
-    CTkLabel(
-        win,
-        text=f"Mute alert when finished: {args.alert}",
-        text_color="blue",
-        font=("Arial", 14),
-    ).pack()
-
-    CTkLabel(
-        win,
-        text=f"Wait after end of conversion: {args.wait}",
-        text_color="blue",
-        font=("Arial", 14),
-    ).pack()
-
-    if not args.wait:
-        print("")
-
-    close_btn = CTkButton(
-        win,
-        fg_color="green",
-        text_color="white",
-        width=250,
-        height=33,
-        font=("Arial", 15),
-        text="Ok",
-        corner_radius=10,
-        hover=False,
-        command=win.destroy,
-    )
-    close_btn.pack(pady=30)
-
-    win.mainloop()
+    log_message(f"Play alert when finished: {args.alert}", "blue")
+    log_message(f"Wait after end of conversion: {args.wait}", "blue")
+    log_message("=== Starting Conversion ===", "green")
 
 
 def convert_to_srgb(img):
@@ -350,15 +301,16 @@ def process_image(args, root, filename, converted_counter):
 
 def wait_keypress(val):
     """Pause the program and wait for a keypress from the user."""
-    try:
-        print(
-            f"\n{Fore.YELLOW}Press {Back.BLACK}{Style.BRIGHT}"
-            f"Enter{Style.NORMAL}{Back.RESET} to {val}{Style.RESET_ALL}",
-            end="",
-        )
-        input()
-    except SyntaxError:
-        pass
+    if not GUI_MODE:  # Only wait for keypress in CLI mode
+        try:
+            print(
+                f"\n{Fore.YELLOW}Press {Back.BLACK}{Style.BRIGHT}"
+                f"Enter{Style.NORMAL}{Back.RESET} to {val}{Style.RESET_ALL}",
+                end="",
+            )
+            input()
+        except SyntaxError:
+            pass
 
 
 def main(args):
@@ -366,33 +318,26 @@ def main(args):
     print_init(args)
     other_files = []
 
-    win2 = CTk()
-    win2.title("Converting process")
-    win2.geometry("500x500")
-
+    # Check for ICC profiles if colorspace conversion is enabled
     if args.colorspace and not (
         os.path.exists(CMYK_PROFILE_PATH) and os.path.exists(SRGB_PROFILE_PATH)
     ):
         args.colorspace = False
 
+    # Find all files in the directory
     for root, _, filenames in os.walk(args.path):
         for filename in filenames:
             if not filename.lower().endswith(FILETYPE):
                 other_files.append([root, filename])
 
-    CTkLabel(win2, text="continue or CTRL+C to abort", font=("Arial", 25)).pack(pady=20)
-
-    # wait_keypress(
-    #     f"continue or {Back.BLACK}{Style.BRIGHT}CTRL+C{Style.NORMAL}{Back.RESET} to abort"
-    # )
-
-    CTkLabel(
-        win2, text="Processing images", text_color="green", font=("Arial", 17)
-    ).pack()
-
+    # Clear exception files list for this run
+    EXCEPTION_FILES.clear()
     converted_counter = {"count": 0}
     start_time = datetime.now()
 
+    log_message("Processing images...", "green")
+
+    # Process images with threading
     with ThreadPoolExecutor() as executor:
         futures = {
             executor.submit(process_image, args, root, filename, converted_counter): (
@@ -403,20 +348,32 @@ def main(args):
             for filename in filenames
             if filename.lower().endswith(FILETYPE)
         }
-        for future in tqdm(
-            as_completed(futures),
-            total=len(futures),
-            unit_divisor=100,
-            colour="green",
-            bar_format="{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt}"
-            " Files | Elapsed: {elapsed} | Remaining: {remaining}",
-        ):
-            root, filename = futures[future]
-            try:
-                future.result()
-            except (ValueError, OSError) as _:
-                EXCEPTION_FILES.append([root, filename])
 
+        if not GUI_MODE:
+            # Show progress bar in CLI mode
+            for future in tqdm(
+                as_completed(futures),
+                total=len(futures),
+                unit_divisor=100,
+                colour="green",
+                bar_format="{desc}: {percentage:3.0f}% | {bar} | {n_fmt}/{total_fmt}"
+                " Files | Elapsed: {elapsed} | Remaining: {remaining}",
+            ):
+                root, filename = futures[future]
+                try:
+                    future.result()
+                except (ValueError, OSError) as _:
+                    EXCEPTION_FILES.append([root, filename])
+        else:
+            # Process without progress bar in GUI mode
+            for future in as_completed(futures):
+                root, filename = futures[future]
+                try:
+                    future.result()
+                except (ValueError, OSError) as _:
+                    EXCEPTION_FILES.append([root, filename])
+
+    # Calculate execution time
     time_exec = datetime.now() - start_time
     str_time = (
         re.match(r"(.+)\.(.+)", str(time_exec), re.M | re.I)
@@ -426,68 +383,44 @@ def main(args):
         + "s"
     )
 
-    CTkLabel(
-        win2,
-        text=f"Time to complete: {str_time}",
-        text_color="green",
-        font=("Arial", 15),
-    ).pack()
-    CTkLabel(
-        win2,
-        text=f"Total number of converted images: {converted_counter['count']}",
-        text_color="blue",
-        font=("Arial", 17),
-    ).pack()
+    # Log results
+    log_message("=== Conversion Results ===", "green")
+    log_message(f"Time to complete: {str_time}", "green")
+    log_message(
+        f"Total number of converted images: {converted_counter['count']}", "blue"
+    )
 
+    # Log corrupted files
     if EXCEPTION_FILES:
         plural_s = "" if len(EXCEPTION_FILES) == 1 else "s"
-        CTkLabel(
-            win2,
-            text=f"{len(EXCEPTION_FILES)} Corrupted image{plural_s}",
-            text_color="pink",
-            font=("Arial", 14),
-        ).pack()
+        log_message(f"{len(EXCEPTION_FILES)} Corrupted image{plural_s}:", "red")
         for excpt in EXCEPTION_FILES:
-            CTkLabel(
-                win2,
-                text=f"-> {excpt[1]} found in {excpt[0]}",
-                text_color="pink",
-                font=("Arial", 14),
-            ).pack()
+            log_message(f"  -> {excpt[1]} found in {excpt[0]}", "red")
     else:
-        CTkLabel(
-            win2,
-            text="No corrupted images found.",
-            text_color="red",
-            font=("Arial", 16),
-        ).pack()
+        log_message("No corrupted images found.", "green")
 
-    if len(other_files) == 1:
-        CTkLabel(
-            win2, text="No other files found.", text_color="red", font=("Arial", 16)
-        ).pack()
-    else:
-        CTkLabel(
-            win2,
-            text="Other files (not converted):",
-            text_color="red",
-            font=("Arial", 16),
-        ).pack()
+    # Log other files
+    if other_files:
+        log_message("Other files (not converted):", "yellow")
         for other in other_files:
             if other[1] != os.path.basename(__file__):
-                CTkLabel(
-                    win2,
-                    text=f"-> {other[1]} found in {other[0]}",
-                    text_color="blue",
-                    font=("Arial", 16),
-                ).pack()
+                log_message(f"  -> {other[1]} found in {other[0]}", "yellow")
+    else:
+        log_message("No other files found.", "green")
 
+    # Alert and wait handling
     if args.alert:
-        print("\a", end="")
-    if args.wait:
-        wait_keypress("exit")
+        print("\a", end="")  # Bell sound
 
-    win2.mainloop()
+    if args.wait and not GUI_MODE:
+        wait_keypress("exit")
+    elif GUI_MODE:
+        # Show completion message in GUI mode
+        messagebox.showinfo(
+            "Conversion Complete",
+            f"Image conversion completed successfully!\n\n"
+            f"Converted {converted_counter['count']} images in {str_time}",
+        )
 
 
 if __name__ == "__main__":

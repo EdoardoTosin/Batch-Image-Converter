@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "batch-image-converter"
+dynamic = ["version"]
+description = "Batch convert images with configurable DPI, resolution, and colour space"
+readme = "README.md"
+license = "GPL-3.0-only"
+authors = [{ name = "Edoardo Tosin" }]
+requires-python = ">=3.11"
+dependencies = [
+    "pillow>=10.4.0",
+    "typer>=0.12.0",
+    "rich>=13.7.0",
+    "PySide6>=6.7.0",
+]
+
+[project.scripts]
+batch-image-converter = "batch_image_converter.__main__:main"
+
+[tool.hatch.version]
+path = "src/batch_image_converter/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/batch_image_converter"]
+
+[dependency-groups]
+dev = [
+    "nuitka>=2.4",
+    "ordered-set>=4.1",
+    "zstandard>=0.22",
+]

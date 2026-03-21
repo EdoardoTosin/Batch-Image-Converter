@@ -12,130 +12,107 @@
 
 <p align="center">
     <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/actions/workflows/build.yml">
-        <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/edoardotosin/Batch-Image-Converter/build.yml?style=for-the-badge"></a>
+        <img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/edoardotosin/Batch-Image-Converter/build.yml?style=for-the-badge"></a>
     <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest">
-        <img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/EdoardoTosin/Batch-Image-Converter?label=Latest%20Release&style=for-the-badge"></a>
-    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/edoardotosin/Batch-Image-Converter/total?style=for-the-badge">
-    <a href="https://edoardotosin.github.io/Batch-Image-Converter">
-        <img alt="GitHub deployments" src="https://img.shields.io/github/deployments/edoardotosin/Batch-Image-Converter/github-pages?label=DEPLOYMENT&style=for-the-badge"></a>
-	<a href="https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/LICENSE">
-		<img alt="GitHub" src="https://img.shields.io/github/license/edoardotosin/Batch-Image-Converter?style=for-the-badge"></a>
+        <img alt="Latest release" src="https://img.shields.io/github/v/release/EdoardoTosin/Batch-Image-Converter?label=Latest%20Release&style=for-the-badge"></a>
+    <img alt="Total downloads" src="https://img.shields.io/github/downloads/edoardotosin/Batch-Image-Converter/total?style=for-the-badge">
+    <a href="https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/LICENSE">
+        <img alt="License" src="https://img.shields.io/github/license/edoardotosin/Batch-Image-Converter?style=for-the-badge"></a>
 </p>
 
-## Summary
-
-Python script that enables users to convert images to a specific dpi, maximum long side resolution, and RGB color space. It supports various file types and provides a user-friendly CLI for easy usage. Additionally, it offers precompiled binaries for Linux, Windows, and Mac platforms, allowing users to run the script without installing Python or any dependencies.
-
-![Output](https://raw.githubusercontent.com/EdoardoTosin/Batch-Image-Converter/main/assets/output.jpg)
+Recursively batch-convert images to JPEG or PNG, resize to fit a pixel box, and embed DPI metadata. Available as a standalone binary (no Python required) or runnable directly with [uv](https://docs.astral.sh/uv/).
 
 ## Features
 
-- Convert images to a specific dpi and maximum long side resolution (Default: 72dpi, 1000px).
-- Convert images to RGB color space (Important: ICC colour profiles are not used for this conversion so switching between different formats may result in incorrect colours).
-- Downscale images using different filters.
-- Compress the palette by eliminating unused colors.
-- Alert user upon completion of conversion.
-- Wait for user keypress upon completion of conversion.
+- **Automatic format selection** - JPEG for opaque images (RGB), PNG for images with any transparent or semi-transparent pixel (RGBA).
+- **Resize without upscaling** - thumbnail fit within a configurable pixel box; aspect ratio always preserved.
+- **DPI metadata** - written into every JPEG (JFIF header) and PNG (pHYs chunk).
+- **Separate output directory** - mirrors the full folder hierarchy from the input directory.
+- **In-place mode** - when no output directory is given, originals are overwritten; files that change format (e.g. `.tiff` → `.jpg`) are permanently deleted.
+- **Case-insensitive extensions** - `.JPG`, `.Jpg`, `.jpg` all match.
+- **Parallel processing** - `ThreadPoolExecutor` scales to all CPU cores.
+- **CMYK → RGB** - uses ICC profiles when present, falls back to a simple conversion automatically.
+- **GUI and CLI** in a single binary - no arguments opens the GUI, any argument uses the CLI.
 
-## Method 1: Download release binary
+## Download
 
-There are precompiled binaries for Linux, Windows, and Mac. These binary files allow you to run the script without installing Python or any dependencies. You can download these binaries from the [Releases](https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest) page. After downloading, simply run the binary file to start using the script.
+Pre-built binaries for Windows, Linux, and macOS are on the [Releases](https://github.com/EdoardoTosin/Batch-Image-Converter/releases/latest) page. No Python or dependencies required.
 
-## Method 2: Build release binary
+- **Windows** - double-click `batch-image-converter.exe` for the GUI, or run from a terminal for the CLI.
+- **Linux / macOS** - `chmod +x batch-image-converter && ./batch-image-converter`
 
-If you wish to manually build the binaries, the repository contains scripts to do so for both Windows and Linux platforms. 
+## Run from source
 
-For Windows, from the `Batch-Image-Converter` directory run `buildWin.ps1` PowerShell script as followed:
-
-```powershell
-git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git
-cd Batch-Image-Converter
-.\tools\buildWin.ps1
-```
-
-For Linux, from the `Batch-Image-Converter` directory run `buildLinux.ps1` bash script as followed:
+Requires [uv](https://docs.astral.sh/uv/getting-started/installation/).
 
 ```bash
 git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git
 cd Batch-Image-Converter
-./tools/buildLinux.sh
+uv sync
+
+uv run batch-image-converter                          # GUI
+uv run batch-image-converter ./photos --dpi 300       # CLI, in-place
+uv run batch-image-converter ./photos -o ./out --dpi 300  # CLI, separate output
 ```
 
-These scripts will automatically build the binaries for the corresponding platform.
-
-## Method 3: Run with Python3
-
-First, clone the repository:
+## Build a binary
 
 ```bash
-git clone https://github.com/EdoardoTosin/Batch-Image-Converter.git
+uv sync --all-groups
+uv run python tools/build.py
+# output: dist/batch-image-converter[.exe]
 ```
 
-Next, navigate into the cloned repository:
+## CLI reference
 
-```bash
-cd Batch-Image-Converter
+```
+Usage: batch-image-converter [OPTIONS] [INPUT_DIR]
+
+  Convert every supported image under INPUT_DIR recursively.
+  Output format per file: PNG (transparent pixels) or JPG (opaque).
+  DPI metadata always written. Folder hierarchy preserved with -o.
+
+Arguments:
+  [INPUT_DIR]  Source directory  [default: current directory]
+
+Options:
+  -o, --output          PATH   Output directory (mirrors INPUT_DIR hierarchy).
+                               Omit for in-place - originals overwritten;
+                               originals deleted on format change.
+  -d, --dpi             INT    DPI written into JPEG/PNG metadata [default: 72]
+                               range: 1–1000
+  -s, --size            INT    Longest side in pixels, downscale only
+                               [default: 1000]  range: 1–10000
+  -f, --filter          INT    Resampling filter [default: 0]  range: 0–5
+                               0 Nearest  1 Lanczos   2 Bilinear
+                               3 Bicubic  4 Box       5 Hamming
+  -q, --quality         INT    JPEG output quality [default: 80]  range: 1–100
+  -m, --max-megapixels  FLOAT  Skip inputs larger than N MP [default: 0 = off]
+  --colorspace / --no-colorspace   ICC-profile CMYK→RGB  [default: no]
+  --cs       / --no-cs             (alias)
+  --optimize / --no-optimize       Palette optimisation   [default: yes]
+  --alert    / --no-alert          Terminal bell on finish [default: no]
+  --help
 ```
 
-Afterwards, install the required Python packages using the `requirements.txt` file:
+> **In-place warning** - the CLI prints a warning before converting in-place. The GUI shows a confirmation dialog with a Cancel button. Always keep a backup of files you cannot re-create.
 
-```bash
-pip3 install -r requirements.txt
-```
+## ICC colour profiles
 
-Once you have installed the required packages and are ready to run the script, you need to move the `main.py` file from the `src` directory into the folder where you want to convert images.
+Place `USWebCoatedSWOP.icc` and `sRGB.icc` next to the binary (or in the working directory when using `uv run`) to enable accurate CMYK → RGB conversion. Without them a simple fallback conversion is used automatically.
 
-On Linux, use the `mv` command:
+## Version
 
-```bash
-mv src/main.py /path/to/your/folder
-```
-
-On Windows, use the `move` command:
-
-```powershell
-Move-Item -Path "src\main.py" -Destination "\path\to\your\folder"
-```
-
-After moving the `main.py` file, navigate to the folder where you moved the file and run the script:
-
-On Linux:
-
-```bash
-cd /path/to/your/folder
-python3 main.py --help
-```
-
-On Windows:
-
-```powershell
-cd \path\to\your\folder
-python main.py --help
-```
-
-## Usage
-
-The script takes several command line arguments:
-
-- `-p` or `--path`: Specify the directory where the images are located. Defaults to the current directory.
-- `-d` or `--dpi`: Specify the pixel density in pixels per inch (dpi). Must be in the range 1-1000. Defaults to 72.
-- `-s` or `--size`: Specify the maximum resolution of the image (long side) in pixels. For downscaling only. Must be in the range 1-10000. Defaults to 1000.
-- `-f` or `--filter`: Specify the type of filter used for downscaling. Must be an integer in the range 0-5. Defaults to 0 (Nearest). ([Filters comparison table](https://pillow.readthedocs.io/en/stable/handbook/concepts.html#filters-comparison-table))
-- `--colorspace` or `--cs`: Convert all images to RGB color space.
-- `-q` or `--quality`: Specify the quality of output images. Must be in the range 1-100. Values above 95 should be avoided. Defaults to 80.
-- `-m` or `--max-image-mpixels`: Specify the maximum images resolution allowed in Megapixel. Defaults to 0 (None).
-- `--optimize`: Attempt to compress the palette by eliminating unused colors.
-- `--alert`: Play alert sound when finished the conversion.
-- `--wait`: Wait for user keypress (Enter) when finished the conversion.
+The single source of truth for the version is `src/batch_image_converter/__init__.py`. `pyproject.toml` and the build script both read it from there - update `__version__` in that one file to release a new version.
 
 ## Security Policy
 
-For more details see the [SECURITY](https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/SECURITY.md) file.
+See [SECURITY.md](https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/SECURITY.md).
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/EdoardoTosin/Batch-Image-Converter/tree/main/CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/CONTRIBUTING.md).
 
 ## License
 
-This software is released under the terms of the GNU General Public License v3.0. See the [LICENSE](https://github.com/EdoardoTosin/Batch-Image-Converter/tree/main/LICENSE) file for further information.
+Released under the GNU General Public License v3.0. See [LICENSE](https://github.com/EdoardoTosin/Batch-Image-Converter/blob/main/LICENSE).
